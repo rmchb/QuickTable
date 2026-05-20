@@ -5,44 +5,78 @@
  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
  <title>QuickTable - Cliente</title>
  <style>
+ @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap');
+
  * {
  margin: 0;
  padding: 0;
  box-sizing: border-box;
- font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
  }
 
  body {
- background: linear-gradient(160deg, #fef3e8 0%, #ffe8d6 30%, #fdf0e6 70%, #fff8f0 100%);
  min-height: 100vh;
  display: flex;
  justify-content: center;
  align-items: center;
- padding: 20px;
+ padding: 16px;
+ background: #f5ede4;
+ background-image:
+ radial-gradient(ellipse at 10% 20%, rgba(200, 80, 30, 0.06) 0%, transparent 50%),
+ radial-gradient(ellipse at 90% 80%, rgba(180, 120, 50, 0.08) 0%, transparent 50%);
+ font-family: 'Inter', system-ui, -apple-system, sans-serif;
  }
 
  .screen {
- background: rgba(255, 255, 255, 0.85);
- backdrop-filter: blur(20px);
- -webkit-backdrop-filter: blur(20px);
- border-radius: 32px;
- max-width: 480px;
+ background: #fffcf9;
+ border-radius: 28px;
+ max-width: 460px;
  width: 100%;
- min-height: 600px;
- box-shadow: 0 8px 32px rgba(200, 120, 50, 0.12);
+ min-height: 640px;
+ box-shadow: 0 4px 24px rgba(120, 60, 20, 0.10), 0 12px 48px rgba(120, 60, 20, 0.06);
  overflow: hidden;
- transition: all 0.2s ease;
  display: flex;
  flex-direction: column;
  }
 
  .header {
- background: #d95c0e;
+ background: #c2410c;
+ background: linear-gradient(135deg, #c2410c 0%, #dc5a1e 50%, #ea6b2e 100%);
  color: white;
- padding: 20px;
- text-align: center;
- font-weight: bold;
- font-size: 1.5rem;
+ padding: 18px 20px;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ font-weight: 800;
+ font-size: 1.3rem;
+ letter-spacing: -0.3px;
+ }
+
+ .header-title {
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ }
+
+ .header-actions {
+ display: flex;
+ gap: 6px;
+ }
+
+ .header-btn {
+ background: rgba(255,255,255,0.2);
+ border: none;
+ color: white;
+ padding: 6px 14px;
+ border-radius: 48px;
+ font-size: 0.75rem;
+ font-weight: 600;
+ cursor: pointer;
+ transition: 0.15s;
+ white-space: nowrap;
+ }
+
+ .header-btn:hover {
+ background: rgba(255,255,255,0.3);
  }
 
  .content {
@@ -52,105 +86,140 @@
  }
 
  .footer {
- padding: 15px;
+ padding: 12px 20px;
  background: #faf3ed;
  border-top: 1px solid #f0e2d5;
- font-size: 0.8rem;
+ font-size: 0.75rem;
  text-align: center;
- color: #9a7a64;
+ color: #a08470;
+ font-weight: 500;
  }
 
  button {
- background: #d95c0e;
+ background: #c2410c;
  border: none;
  color: white;
- padding: 12px 20px;
+ padding: 14px 20px;
  border-radius: 48px;
- font-weight: bold;
- font-size: 1rem;
+ font-weight: 700;
+ font-size: 0.95rem;
  cursor: pointer;
- transition: 0.2s;
+ transition: 0.15s;
  width: 100%;
- margin: 8px 0;
+ margin: 6px 0;
+ letter-spacing: -0.2px;
+ box-shadow: 0 2px 8px rgba(194, 65, 12, 0.15);
  }
 
  button:active {
  transform: scale(0.97);
- background: #c04e08;
+ background: #a3350a;
  }
 
  .btn-secondary {
- background: #a08470;
+ background: #8a7a6a;
+ box-shadow: none;
  }
 
  .btn-secondary:active {
- background: #8a7060;
+ background: #6e5f50;
  }
 
  .btn-outline {
  background: transparent;
- border: 2px solid #d95c0e;
- color: #d95c0e;
+ border: 2px solid #c2410c;
+ color: #c2410c;
+ box-shadow: none;
+ }
+
+ .btn-outline:active {
+ background: rgba(194, 65, 12, 0.06);
  }
 
  .btn-success {
  background: #2b8c3e;
+ box-shadow: 0 2px 8px rgba(43, 140, 62, 0.15);
  }
 
  .btn-success:active {
  background: #1f6d2e;
  }
 
+ .btn-sm {
+ padding: 8px 14px;
+ font-size: 0.8rem;
+ width: auto;
+ margin: 0;
+ }
+
  .option-grid {
  display: flex;
  flex-direction: column;
- gap: 12px;
- margin: 20px 0;
+ gap: 10px;
+ margin: 16px 0;
  }
 
  .card-item {
- background: rgba(255,255,255,0.9);
- border-radius: 20px;
- padding: 16px;
- margin-bottom: 12px;
- box-shadow: 0 2px 8px rgba(180,100,40,0.06);
- border: 1px solid #f0e2d5;
+ background: white;
+ border-radius: 18px;
+ padding: 14px 16px;
+ margin-bottom: 10px;
+ box-shadow: 0 1px 4px rgba(120, 60, 20, 0.06);
+ border: 1px solid #f5e8de;
  display: flex;
  justify-content: space-between;
  align-items: center;
+ transition: 0.15s;
+ }
+
+ .card-item:hover {
+ border-color: #e8d5c5;
+ box-shadow: 0 2px 8px rgba(120, 60, 20, 0.08);
  }
 
  .item-info h3 {
- font-size: 1.1rem;
+ font-size: 1rem;
+ font-weight: 700;
+ margin-bottom: 2px;
  }
 
  .item-info p {
- font-size: 0.8rem;
+ font-size: 0.75rem;
  color: #8a7a6a;
  }
 
  .price {
- font-weight: bold;
- color: #d95c0e;
+ font-weight: 700;
+ color: #c2410c;
+ font-size: 1rem;
  }
 
  .add-btn {
- background: #d95c0e;
+ background: #c2410c;
  border: none;
  color: white;
- width: 40px;
- height: 40px;
- border-radius: 40px;
- font-size: 1.5rem;
- font-weight: bold;
+ width: 38px;
+ height: 38px;
+ border-radius: 38px;
+ font-size: 1.4rem;
+ font-weight: 700;
  cursor: pointer;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ box-shadow: 0 2px 6px rgba(194, 65, 12, 0.2);
+ transition: 0.15s;
+ }
+
+ .add-btn:active {
+ transform: scale(0.9);
  }
 
  .cart-summary {
  background: #fef6ed;
- border-radius: 20px;
+ border-radius: 18px;
  padding: 16px;
- margin-top: 20px;
+ margin-top: 16px;
  border: 1px solid #f5e3d5;
  }
 
@@ -158,141 +227,295 @@
  background: #eaf7ed;
  color: #1f6d2e;
  padding: 12px;
- border-radius: 20px;
+ border-radius: 18px;
  text-align: center;
- margin-bottom: 20px;
+ margin-bottom: 16px;
+ font-weight: 500;
+ font-size: 0.85rem;
  }
 
  .welcome-badge {
- background: rgba(217, 92, 14, 0.06);
- padding: 12px;
- border-radius: 24px;
- margin-bottom: 20px;
- border-left: 4px solid #d95c0e;
+ background: linear-gradient(135deg, rgba(194, 65, 12, 0.06), rgba(220, 90, 30, 0.03));
+ padding: 14px;
+ border-radius: 18px;
+ margin-bottom: 16px;
+ border-left: 4px solid #c2410c;
  }
 
  .hidden {
- display: none;
+ display: none !important;
  }
 
  .back-button {
  background: none;
- color: #d95c0e;
+ color: #c2410c;
  text-align: left;
- font-weight: normal;
+ font-weight: 600;
  padding: 6px 0;
+ width: auto;
+ box-shadow: none;
+ margin: 0;
+ }
+
+ input, select {
+ width: 100%;
+ padding: 12px 16px;
+ border-radius: 48px;
+ border: 1.5px solid #e8d5c5;
+ background: #fcf8f5;
+ font-size: 0.9rem;
+ margin-bottom: 8px;
+ outline: none;
+ transition: 0.15s;
+ font-family: 'Inter', system-ui, sans-serif;
+ }
+
+ input:focus {
+ border-color: #c2410c;
+ background: white;
+ box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.08);
+ }
+
+ input::placeholder {
+ color: #b8a898;
  }
 
  hr {
- margin: 16px 0;
+ margin: 14px 0;
  border: none;
  border-top: 1px solid #f0e2d5;
+ }
+
+ .badge {
+ display: inline-block;
+ background: #c2410c;
+ color: white;
+ font-size: 0.7rem;
+ font-weight: 700;
+ padding: 2px 10px;
+ border-radius: 48px;
+ }
+
+ .cat-header {
+ font-size: 1rem;
+ font-weight: 700;
+ color: #5a4a3a;
+ margin: 20px 0 8px 0;
+ padding-bottom: 6px;
+ border-bottom: 2px solid #f5e8de;
+ }
+
+ .section-title {
+ font-size: 1.1rem;
+ font-weight: 700;
+ color: #3a2a1a;
+ margin-bottom: 12px;
+ }
+
+ .card-item-pre {
+ background: white;
+ border-radius: 18px;
+ padding: 14px 16px;
+ margin-bottom: 8px;
+ box-shadow: 0 1px 4px rgba(120, 60, 20, 0.06);
+ border: 1px solid #f5e8de;
+ }
+
+ .pre-item-confirmed {
+ border-left: 4px solid #2b8c3e;
+ }
+
+ .pre-item-modified {
+ border-left: 4px solid #c2410c;
+ }
+
+ .total-row {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding: 8px 0;
+ font-weight: 600;
+ }
+
+ .total-row strong {
+ font-size: 1.1rem;
+ }
+
+ .empty-state {
+ text-align: center;
+ padding: 40px 0;
+ color: #b8a898;
+ }
+
+ .empty-state div {
+ font-size: 3rem;
+ margin-bottom: 12px;
+ }
+
+ .order-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
  }
  </style>
 </head>
 <body>
 <div class="screen" id="app">
- <div class="header">🍽️ QuickTable</div>
- <div class="content" id="mainContent">
- <!-- Contenido dinámico -->
+ <div class="header">
+ <div class="header-title">🍽️ QuickTable</div>
+ <div class="header-actions" id="headerActions">
+ <button id="headerPreBtn" class="header-btn hidden">📋 Pre-cuenta</button>
+ <button id="headerLogoutBtn" class="header-btn hidden">🚪 Salir</button>
  </div>
- <div class="footer">Cliente | Mesa virtual</div>
+ </div>
+ <div class="content" id="mainContent">
+ </div>
+ <div class="footer">Cliente · Mesa virtual</div>
 </div>
 
 <script>
  const cartaData = {
  entradas: [
- { id: 1, nombre: "🍟 Papas bravas", precio: 4.90, descripcion: "Con salsa picante y alioli" },
- { id: 2, nombre: "🥗 Ensalada César", precio: 6.50, descripcion: "Pollo, parmesano, aderezo César" }
+ { id: 1, nombre: "Papas bravas", precio: 4.90, descripcion: "Con salsa picante y alioli", emoji: "🍟" },
+ { id: 2, nombre: "Ensalada César", precio: 6.50, descripcion: "Pollo, parmesano, aderezo César", emoji: "🥗" }
  ],
  principales: [
- { id: 3, nombre: "🍔 Hamburguesa Clásica", precio: 9.90, descripcion: "Carne 180gr, queso, lechuga, tomate" },
- { id: 4, nombre: "🍝 Lomo saltado", precio: 12.90, descripcion: "Lomo, cebolla, tomate, papas, arroz" },
- { id: 5, nombre: "🥩 Picanha a la parrilla", precio: 15.90, descripcion: "Con guarnición y chimichurri" }
+ { id: 3, nombre: "Hamburguesa Clásica", precio: 9.90, descripcion: "Carne 180gr, queso, lechuga, tomate", emoji: "🍔" },
+ { id: 4, nombre: "Lomo saltado", precio: 12.90, descripcion: "Lomo, cebolla, tomate, papas, arroz", emoji: "🍝" },
+ { id: 5, nombre: "Picanha a la parrilla", precio: 15.90, descripcion: "Con guarnición y chimichurri", emoji: "🥩" }
  ],
  postres: [
- { id: 6, nombre: "🍰 Tarta de queso", precio: 4.50, descripcion: "Con coulis de frutos rojos" },
- { id: 7, nombre: "🍫 Volcán de chocolate", precio: 5.20, descripcion: "Con helado de vainilla" }
+ { id: 6, nombre: "Tarta de queso", precio: 4.50, descripcion: "Con coulis de frutos rojos", emoji: "🍰" },
+ { id: 7, nombre: "Volcán de chocolate", precio: 5.20, descripcion: "Con helado de vainilla", emoji: "🍫" }
  ],
  bebidas: [
- { id: 8, nombre: "🥤 Gaseosa", precio: 2.50, descripcion: "Personal 400ml" },
- { id: 9, nombre: "🍺 Cerveza artesanal", precio: 4.00, descripcion: "Rubia 500ml" }
+ { id: 8, nombre: "Gaseosa", precio: 2.50, descripcion: "Personal 400ml", emoji: "🥤" },
+ { id: 9, nombre: "Cerveza artesanal", precio: 4.00, descripcion: "Rubia 500ml", emoji: "🍺" }
  ]
  };
 
+ // ─── ESTADO ─────────────────────────────────────────────────────
  let currentUser = null;
- let currentOrder = [];
+ let currentOrder = [];          // { id, nombre, precio, cantidad, emoji }
+ let confirmedOrder = [];        // copia que "envía" al mozo (simula confirmación)
+ let mozoFinalOrder = null;     // lo que el mozo reconfirma (simulado con delay)
  let currentScreen = "auth";
  let orderConfirmed = false;
+ let mozoCheckInterval = null;
+
+ // helpers
+ function totalItems(arr) { return arr.reduce((s,i) => s + i.cantidad, 0); }
+ function totalPrice(arr) { return arr.reduce((s,i) => s + (i.precio * i.cantidad), 0); }
 
  function render() {
  const container = document.getElementById("mainContent");
+ const preBtn = document.getElementById("headerPreBtn");
+ const logoutBtn = document.getElementById("headerLogoutBtn");
+
+ if (currentUser) {
+ logoutBtn.classList.remove("hidden");
+ if (mozoFinalOrder && mozoFinalOrder.length > 0) {
+ preBtn.classList.remove("hidden");
+ } else {
+ preBtn.classList.add("hidden");
+ }
+ } else {
+ logoutBtn.classList.add("hidden");
+ preBtn.classList.add("hidden");
+ }
+
  if (currentScreen === "auth") renderAuth(container);
  else if (currentScreen === "main") renderMainMenu(container);
  else if (currentScreen === "menuCarta") renderCarta(container);
+ else if (currentScreen === "preCuenta") renderPreCuenta(container);
  else if (currentScreen === "confirmMozo") renderMozo(container);
  else if (currentScreen === "confirmCuenta") renderCuenta(container);
  }
 
- // ─── AUTH ───────────────────────────────────────────────────────────
+ // ─── SIMULACIÓN MOZO ────────────────────────────────────────────
+ function simularConfirmacionMozo() {
+ // El mozo "confirma" con algunos cambios aleatorios
+ mozoFinalOrder = confirmedOrder.map(item => {
+ // 30% de probabilidad que el mozo modifique la cantidad
+ if (Math.random() < 0.3) {
+ const diff = Math.floor(Math.random() * 3) - 1; // -1, 0, o +1
+ const newCant = Math.max(0, item.cantidad + diff);
+ return { ...item, cantidad: newCant, modificado: diff !== 0 };
+ }
+ return { ...item, modificado: false };
+ }).filter(i => i.cantidad > 0);
+ render();
+ }
+
+ // ─── HEADER EVENTS ──────────────────────────────────────────────
+ document.getElementById("headerLogoutBtn")?.addEventListener("click", () => {
+ if (mozoCheckInterval) clearInterval(mozoCheckInterval);
+ mozoCheckInterval = null;
+ currentUser = null; currentOrder = []; confirmedOrder = []; mozoFinalOrder = null;
+ orderConfirmed = false; currentScreen = "auth";
+ render();
+ });
+ document.getElementById("headerPreBtn")?.addEventListener("click", () => {
+ if (mozoFinalOrder) {
+ currentScreen = "preCuenta";
+ render();
+ }
+ });
+
+ // ─── AUTH ───────────────────────────────────────────────────────
  function renderAuth(container) {
  container.innerHTML = `
- <div style="text-align:center; padding:20px 0;">
+ <div style="text-align:center; padding:24px 0 8px;">
  <div style="font-size:3.5rem;">🍽️</div>
- <h2 style="margin:8px 0 4px;">QuickTable</h2>
- <p style="color:#8a7a6a; font-size:0.9rem;">Tu menú digital</p>
+ <h2 style="margin:8px 0 2px; font-family:'Playfair Display', serif; font-size:1.8rem; color:#3a2a1a;">QuickTable</h2>
+ <p style="color:#8a7a6a; font-size:0.85rem;">Pide desde tu mesa</p>
  </div>
  <div class="option-grid" id="authButtons">
  <button id="loginBtn">🔐 Iniciar sesión</button>
  <button id="registerBtn" class="btn-outline">📝 Registrarse</button>
- <button id="guestBtn" class="btn-outline" style="border-color:#a08470; color:#a08470;">👤 Continuar como invitado</button>
+ <button id="guestBtn" class="btn-outline" style="border-color:#8a7a6a; color:#8a7a6a;">👤 Continuar como invitado</button>
  </div>
-
- <!-- Login form -->
- <div id="loginForm" class="hidden" style="margin-top:16px;">
- <input type="text" id="loginId" placeholder="ID de usuario" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:8px;">
- <input type="password" id="loginPass" placeholder="Contraseña" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:12px;">
+ <div id="loginForm" class="hidden" style="margin-top:12px;">
+ <input type="text" id="loginId" placeholder="ID de usuario">
+ <input type="password" id="loginPass" placeholder="Contraseña">
  <button id="doLoginBtn">Ingresar</button>
  <button id="cancelLoginBtn" class="btn-secondary">Cancelar</button>
  </div>
-
- <!-- Register form -->
- <div id="registerForm" class="hidden" style="margin-top:16px;">
- <input type="text" id="regId" placeholder="ID de usuario" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:8px;">
- <input type="password" id="regPass" placeholder="Contraseña" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:8px;">
- <input type="text" id="regName" placeholder="Nombre" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:8px;">
- <input type="text" id="regLastName" placeholder="Apellido" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:8px;">
- <input type="email" id="regEmail" placeholder="Correo electrónico" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:8px;">
- <label style="font-size:0.85rem; color:#8a7a6a; margin-left:8px;">Fecha de nacimiento</label>
- <input type="date" id="regBirth" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:12px; color:#666;">
+ <div id="registerForm" class="hidden" style="margin-top:12px;">
+ <input type="text" id="regId" placeholder="ID de usuario">
+ <input type="password" id="regPass" placeholder="Contraseña">
+ <input type="text" id="regName" placeholder="Nombre">
+ <input type="text" id="regLastName" placeholder="Apellido">
+ <input type="email" id="regEmail" placeholder="Correo electrónico">
+ <label style="font-size:0.8rem; color:#8a7a6a; margin-left:8px;">Fecha de nacimiento</label>
+ <input type="date" id="regBirth" style="margin-bottom:12px;">
  <button id="doRegisterBtn">Crear cuenta</button>
  <button id="cancelRegisterBtn" class="btn-secondary">Cancelar</button>
  </div>
  `;
 
  document.getElementById("loginBtn")?.addEventListener("click", () => {
- document.getElementById("authButtons")?.classList.add("hidden");
- document.getElementById("loginForm")?.classList.remove("hidden");
+ document.getElementById("authButtons").classList.add("hidden");
+ document.getElementById("loginForm").classList.remove("hidden");
  });
  document.getElementById("cancelLoginBtn")?.addEventListener("click", () => {
- document.getElementById("authButtons")?.classList.remove("hidden");
- document.getElementById("loginForm")?.classList.add("hidden");
+ document.getElementById("authButtons").classList.remove("hidden");
+ document.getElementById("loginForm").classList.add("hidden");
  });
  document.getElementById("doLoginBtn")?.addEventListener("click", () => {
  const id = document.getElementById("loginId")?.value.trim();
- if (!id) { alert("Ingresa tu ID de usuario"); return; }
- currentUser = { id, nombre: id, email: id + "@mail.com", esPreferencial: true };
- currentOrder = []; orderConfirmed = false;
- currentScreen = "main";
- render();
+ if (!id) { alert("Ingresa tu ID"); return; }
+ currentUser = { id, nombre: id, email: id+"@mail.com", esPreferencial: true };
+ currentOrder = []; confirmedOrder = []; mozoFinalOrder = null; orderConfirmed = false;
+ currentScreen = "main"; render();
  });
  document.getElementById("registerBtn")?.addEventListener("click", () => {
- document.getElementById("authButtons")?.classList.add("hidden");
- document.getElementById("registerForm")?.classList.remove("hidden");
+ document.getElementById("authButtons").classList.add("hidden");
+ document.getElementById("registerForm").classList.remove("hidden");
  });
  document.getElementById("cancelRegisterBtn")?.addEventListener("click", () => {
- document.getElementById("authButtons")?.classList.remove("hidden");
- document.getElementById("registerForm")?.classList.add("hidden");
+ document.getElementById("authButtons").classList.remove("hidden");
+ document.getElementById("registerForm").classList.add("hidden");
  });
  document.getElementById("doRegisterBtn")?.addEventListener("click", () => {
  const id = document.getElementById("regId")?.value.trim();
@@ -302,88 +525,107 @@
  const email = document.getElementById("regEmail")?.value.trim();
  const birth = document.getElementById("regBirth")?.value;
  if (!id || !pass || !name || !lastName || !email || !birth) {
- alert("Completa todos los campos para registrarte.");
- return;
+ alert("Completa todos los campos."); return;
  }
- currentUser = { id, nombre: name + " " + lastName, email, pass, birth, esPreferencial: false };
- currentOrder = []; orderConfirmed = false;
- currentScreen = "main";
- render();
+ currentUser = { id, nombre: name+" "+lastName, email, pass, birth, esPreferencial: false };
+ currentOrder = []; confirmedOrder = []; mozoFinalOrder = null; orderConfirmed = false;
+ currentScreen = "main"; render();
  });
  document.getElementById("guestBtn")?.addEventListener("click", () => {
- currentUser = null; currentOrder = []; orderConfirmed = false;
- currentScreen = "main";
- render();
+ currentUser = null; currentOrder = []; confirmedOrder = []; mozoFinalOrder = null; orderConfirmed = false;
+ currentScreen = "main"; render();
  });
  }
 
- // ─── MAIN MENU ──────────────────────────────────────────────────────
+ // ─── MAIN MENU ──────────────────────────────────────────────────
  function renderMainMenu(container) {
- let userInfo = '';
+ let greeting = '';
  if (currentUser) {
- userInfo = `<div class="welcome-badge"><strong>✨ ¡Hola ${currentUser.nombre}!</strong><br><small>Según tus consumos previos, tienes un 10% OFF en tu próxima bebida. 🎁</small></div>`;
+ greeting = `<div class="welcome-badge"><strong>✨ ¡Hola ${currentUser.nombre}!</strong><br><small>Tienes beneficios exclusivos por ser miembro. 🎁</small></div>`;
  } else {
- userInfo = `<div class="alert">👋 Estás como invitado. Regístrate para recibir promos.</div>`;
+ greeting = `<div class="alert">👋 Estás como invitado. <a href="#" id="inviteRegisterLink" style="color:#c2410c;font-weight:600;">Regístrate</a> para recibir promos.</div>`;
+ }
+
+ let orderStatus = '';
+ if (orderConfirmed) {
+ orderStatus = `<div class="alert">✅ Pedido enviado al mozo. Espera reconfirmación.</div>`;
+ if (mozoFinalOrder) {
+ const diff = totalItems(mozoFinalOrder) !== totalItems(confirmedOrder);
+ orderStatus = `<div class="alert" style="background:#fef6ed;color:#8a5a2a;">🛎️ Mozo reconfirmó tu pedido. ${diff ? 'Algunos items fueron ajustados.' : ''} <a href="#" id="preLink" style="color:#c2410c;font-weight:600;">Ver pre-cuenta</a></div>`;
+ }
  }
 
  let orderPreview = '';
  if (currentOrder.length > 0) {
- const totalItems = currentOrder.reduce((s, i) => s + i.cantidad, 0);
- const totalPrice = currentOrder.reduce((s, i) => s + (i.precio * i.cantidad), 0).toFixed(2);
- orderPreview = `<div class="cart-summary">🛒 Pedido actual: ${totalItems} productos · $${totalPrice}<br><small>Ve a "Carta" para agregar más</small></div>`;
- if (orderConfirmed) orderPreview += `<div class="alert" style="margin-top:8px;">✅ Pedido confirmado. El mozo lo está preparando.</div>`;
+ const qty = totalItems(currentOrder);
+ const total = totalPrice(currentOrder).toFixed(2);
+ orderPreview = `<div class="cart-summary">🛒 Pedido: ${qty} productos · $${total}</div>`;
  } else {
- orderPreview = `<div class="cart-summary">🛒 Tu pedido está vacío.</div>`;
+ orderPreview = `<div class="cart-summary" style="color:#8a7a6a;">🛒 Tu pedido está vacío</div>`;
  }
 
  container.innerHTML = `
- ${userInfo}
+ ${greeting}
  <div class="option-grid">
  <button id="btnCarta">📖 Ver carta</button>
  <button id="btnMozo">🛎️ Llamar al mozo</button>
  <button id="btnCuenta">💰 Pedir cuenta</button>
  </div>
+ ${orderStatus}
  ${orderPreview}
  `;
- document.getElementById("btnCarta")?.addEventListener("click", () => { currentScreen = "menuCarta"; render(); });
- document.getElementById("btnMozo")?.addEventListener("click", () => { currentScreen = "confirmMozo"; render(); });
- document.getElementById("btnCuenta")?.addEventListener("click", () => { currentScreen = "confirmCuenta"; render(); });
+
+ document.getElementById("btnCarta")?.addEventListener("click", () => { currentScreen="menuCarta"; render(); });
+ document.getElementById("btnMozo")?.addEventListener("click", () => { currentScreen="confirmMozo"; render(); });
+ document.getElementById("btnCuenta")?.addEventListener("click", () => { currentScreen="confirmCuenta"; render(); });
+ document.getElementById("inviteRegisterLink")?.addEventListener("click", (e) => { e.preventDefault(); currentScreen="auth"; render(); });
+ document.getElementById("preLink")?.addEventListener("click", (e) => { e.preventDefault(); currentScreen="preCuenta"; render(); });
  }
 
- // ─── CARTA ──────────────────────────────────────────────────────────
+ // ─── CARTA ──────────────────────────────────────────────────────
  function renderCarta(container) {
- let html = `<button id="backToMain" class="back-button">← Volver al menú</button>`;
- html += `<h3 style="margin:12px 0 0 0">📋 Nuestra Carta</h3>`;
+ let html = `<button id="backToMain" class="back-button">← Volver</button>`;
+ html += `<div class="section-title" style="margin-top:8px;">📋 Nuestra Carta</div>`;
 
  const categorias = [
- { nombre: "🥗 Entradas", items: cartaData.entradas },
- { nombre: "🍽️ Platos principales", items: cartaData.principales },
- { nombre: "🍰 Postres", items: cartaData.postres },
- { nombre: "🥤 Bebidas", items: cartaData.bebidas }
+ { nombre: "Entradas", items: cartaData.entradas },
+ { nombre: "Platos principales", items: cartaData.principales },
+ { nombre: "Postres", items: cartaData.postres },
+ { nombre: "Bebidas", items: cartaData.bebidas }
  ];
 
  for (let cat of categorias) {
- html += `<h4 style="margin-top:20px;">${cat.nombre}</h4>`;
+ html += `<div class="cat-header">${cat.nombre}</div>`;
  for (let item of cat.items) {
- html += `<div class="card-item"><div class="item-info"><h3>${item.nombre}</h3><p>${item.descripcion}</p><span class="price">$${item.precio.toFixed(2)}</span></div><button class="add-btn" data-id="${item.id}" data-nombre="${item.nombre}" data-precio="${item.precio}">+</button></div>`;
+ html += `<div class="card-item">
+ <div class="item-info">
+ <h3>${item.emoji} ${item.nombre}</h3>
+ <p>${item.descripcion}</p>
+ <span class="price">S/ ${item.precio.toFixed(2)}</span>
+ </div>
+ <button class="add-btn" data-id="${item.id}" data-nombre="${item.nombre}" data-precio="${item.precio}" data-emoji="${item.emoji}">+</button>
+ </div>`;
  }
  }
 
- // Resumen del pedido
- let summary = `<div class="cart-summary" style="margin-top:24px;"><strong>🧾 Mi pedido</strong>`;
+ let summary = `<div class="cart-summary"><div class="order-header"><strong>🧾 Mi pedido</strong>`;
+ summary += `<span class="badge">${totalItems(currentOrder)} items</span></div>`;
  if (currentOrder.length === 0) {
- summary += `<p style="margin-top:8px;color:#8a7a6a;">No hay productos agregados.</p>`;
+ summary += `<div class="empty-state"><div>🛒</div><p>Agrega productos de la carta</p></div>`;
  } else {
  currentOrder.forEach(item => {
- summary += `<div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;"><span>${item.cantidad}x ${item.nombre}</span><span>$${(item.precio * item.cantidad).toFixed(2)}</span></div>`;
+ summary += `<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+ <span>${item.emoji} ${item.cantidad}x ${item.nombre}</span>
+ <span style="font-weight:600;color:#c2410c;">S/ ${(item.precio * item.cantidad).toFixed(2)}</span>
+ </div>`;
  });
- const total = currentOrder.reduce((s, i) => s + (i.precio * i.cantidad), 0).toFixed(2);
- summary += `<hr><strong>Total: $${total}</strong>`;
+ const total = totalPrice(currentOrder).toFixed(2);
+ summary += `<hr><div class="total-row"><strong>Total</strong><strong>S/ ${total}</strong></div>`;
  }
  summary += `</div>`;
 
  html += summary;
- html += `<button id="sendOrderBtn" class="btn-success" style="margin-top:12px;">📤 Solicitar pedido</button>`;
+ html += `<button id="sendOrderBtn" class="btn-success">📤 Solicitar pedido</button>`;
  html += `<button id="clearOrderBtn" class="btn-secondary">🗑️ Vaciar pedido</button>`;
 
  container.innerHTML = html;
@@ -393,69 +635,132 @@
  const id = parseInt(btn.dataset.id);
  const nombre = btn.dataset.nombre;
  const precio = parseFloat(btn.dataset.precio);
+ const emoji = btn.dataset.emoji || "🍽️";
  const existing = currentOrder.find(i => i.id === id);
  if (existing) existing.cantidad += 1;
- else currentOrder.push({ id, nombre, precio, cantidad: 1 });
+ else currentOrder.push({ id, nombre, precio, cantidad: 1, emoji });
  orderConfirmed = false;
  renderCarta(container);
  });
  });
- document.getElementById("backToMain")?.addEventListener("click", () => { currentScreen = "main"; render(); });
+ document.getElementById("backToMain")?.addEventListener("click", () => { currentScreen="main"; render(); });
  document.getElementById("clearOrderBtn")?.addEventListener("click", () => {
- if (confirm("¿Vaciar todo el pedido?")) { currentOrder = []; orderConfirmed = false; renderCarta(container); }
+ if (confirm("¿Vaciar todo?")) { currentOrder = []; confirmedOrder = []; orderConfirmed = false; renderCarta(container); }
  });
  document.getElementById("sendOrderBtn")?.addEventListener("click", () => {
  if (currentOrder.length === 0) { alert("Agrega productos primero."); return; }
+ // Enviar copia al "mozo"
+ confirmedOrder = currentOrder.map(i => ({ ...i }));
  orderConfirmed = true;
- alert("✅ Pedido enviado. Un mozo pasará a reconfirmar tu orden.");
- currentScreen = "main";
- render();
+ // Simular que el mozo responde entre 5 y 12 segundos
+ setTimeout(() => simularConfirmacionMozo(), 5000 + Math.random() * 7000);
+ alert("✅ Pedido enviado. El mozo pasará a reconfirmar.");
+ currentScreen = "main"; render();
  });
  }
 
- // ─── MOZO ───────────────────────────────────────────────────────────
+ // ─── PRE-CUENTA ────────────────────────────────────────────────
+ function renderPreCuenta(container) {
+ let html = `<button id="backMain" class="back-button">← Volver</button>`;
+ html += `<div class="section-title" style="margin-top:8px;">📋 Pre-cuenta</div>`;
+
+ if (!mozoFinalOrder || mozoFinalOrder.length === 0) {
+ html += `<div class="empty-state"><div>🧾</div><p>No hay pedidos reconfirmados aún</p></div>`;
+ container.innerHTML = html;
+ document.getElementById("backMain")?.addEventListener("click", () => { currentScreen="main"; render(); });
+ return;
+ }
+
+ html += `<p style="color:#8a7a6a; font-size:0.85rem; margin-bottom:16px;">Items reconfirmados por el mozo</p>`;
+
+ // Lo que pediste originalmente
+ html += `<div style="font-size:0.85rem; font-weight:600; color:#5a4a3a; margin-bottom:8px;">📝 Pediste:</div>`;
+ confirmedOrder.forEach(item => {
+ html += `<div class="card-item-pre">
+ <div style="display:flex;justify-content:space-between;">
+ <span>${item.emoji} ${item.cantidad}x ${item.nombre}</span>
+ <span style="color:#c2410c;font-weight:600;">S/ ${(item.precio * item.cantidad).toFixed(2)}</span>
+ </div>
+ </div>`;
+ });
+
+ html += `<hr>`;
+
+ // Lo que el mozo reconfirmó
+ let anyModified = false;
+ html += `<div style="font-size:0.85rem; font-weight:600; color:#5a4a3a; margin-bottom:8px;">✅ Reconﬁrmado por mozo:</div>`;
+ mozoFinalOrder.forEach(item => {
+ const cls = item.modificado ? "pre-item-modified" : "pre-item-confirmed";
+ if (item.modificado) anyModified = true;
+ html += `<div class="card-item-pre ${cls}">
+ <div style="display:flex;justify-content:space-between;align-items:center;">
+ <div>
+ <span>${item.emoji} ${item.cantidad}x ${item.nombre}</span>
+ ${item.modificado ? '<span style="font-size:0.7rem;color:#c2410c;font-weight:600;margin-left:8px;">(ajustado)</span>' : ''}
+ </div>
+ <span style="color:#2b8c3e;font-weight:600;">S/ ${(item.precio * item.cantidad).toFixed(2)}</span>
+ </div>
+ </div>`;
+ });
+
+ const total = totalPrice(mozoFinalOrder).toFixed(2);
+ html += `<div class="cart-summary" style="margin-top:16px;">
+ <div class="total-row"><strong>Total final</strong><strong style="color:#c2410c;">S/ ${total}</strong></div>
+ </div>`;
+
+ if (anyModified) {
+ html += `<div class="alert" style="background:#fef6ed;color:#8a5a2a;">ℹ️ Algunas cantidades fueron ajustadas por el mozo según disponibilidad.</div>`;
+ }
+
+ container.innerHTML = html;
+ document.getElementById("backMain")?.addEventListener("click", () => { currentScreen="main"; render(); });
+ }
+
+ // ─── MOZO ───────────────────────────────────────────────────────
  function renderMozo(container) {
  container.innerHTML = `
- <button id="backMain" class="back-button">← Volver al menú</button>
+ <button id="backMain" class="back-button">← Volver</button>
  <div style="text-align:center; margin-top:40px;">
  <div style="font-size:4rem;">🛎️</div>
- <h2>Solicitud enviada</h2>
- <p>Un mozo se acercará a tu mesa en breve.</p>
- <div class="alert">✅ Notificación enviada al sistema de atención.</div>
+ <h2 style="margin:12px 0 4px;">Solicitud enviada</h2>
+ <p style="color:#8a7a6a;">Un mozo se acercará a tu mesa en breve.</p>
+ <div class="alert">✅ Notificación enviada al sistema</div>
  <button id="okMozoBtn" class="btn-outline">Entendido</button>
  </div>
  `;
- document.getElementById("backMain")?.addEventListener("click", () => { currentScreen = "main"; render(); });
- document.getElementById("okMozoBtn")?.addEventListener("click", () => { currentScreen = "main"; render(); });
+ document.getElementById("backMain")?.addEventListener("click", () => { currentScreen="main"; render(); });
+ document.getElementById("okMozoBtn")?.addEventListener("click", () => { currentScreen="main"; render(); });
  }
 
- // ─── CUENTA ─────────────────────────────────────────────────────────
+ // ─── CUENTA ─────────────────────────────────────────────────────
  function renderCuenta(container) {
- let total = currentOrder.reduce((s, i) => s + (i.precio * i.cantidad), 0).toFixed(2);
+ const items = mozoFinalOrder || currentOrder;
+ const total = totalPrice(items).toFixed(2);
  let itemsHtml = "";
- if (currentOrder.length === 0) {
- itemsHtml = "<p style='color:#8a7a6a;'>No has agregado productos aún.</p>";
+ if (items.length === 0) {
+ itemsHtml = "<div class='empty-state'><div>🧾</div><p>No hay productos en tu cuenta</p></div>";
  } else {
- currentOrder.forEach(item => {
- itemsHtml += `<div>${item.cantidad}x ${item.nombre} = $${(item.precio * item.cantidad).toFixed(2)}</div>`;
+ items.forEach(item => {
+ itemsHtml += `<div class="card-item-pre"><div style="display:flex;justify-content:space-between;"><span>${item.emoji || '🍽️'} ${item.cantidad}x ${item.nombre}</span><span style="font-weight:600;">S/ ${(item.precio * item.cantidad).toFixed(2)}</span></div></div>`;
  });
  }
  container.innerHTML = `
- <button id="backMain" class="back-button">← Volver al menú</button>
- <h3>🧾 Resumen de consumo</h3>
+ <button id="backMain" class="back-button">← Volver</button>
+ <div class="section-title" style="margin-top:8px;">💰 Cuenta</div>
  ${itemsHtml}
  <hr>
- <h3>Total: $${total}</h3>
- <div class="alert" style="margin-top:20px;">💳 Puedes pagar con tarjeta, efectivo o QR.</div>
+ <div class="cart-summary"><div class="total-row"><strong>Total a pagar</strong><strong style="color:#c2410c;font-size:1.2rem;">S/ ${total}</strong></div></div>
+ <div class="alert" style="margin-top:16px;">💳 Puedes pagar con tarjeta, efectivo o QR</div>
  <button id="requestBillBtn">Solicitar cuenta final</button>
- <p style="font-size:0.75rem; margin-top:12px; color:#8a7a6a;">*Un mozo se acercará con el comprobante.</p>
+ <p style="font-size:0.75rem; margin-top:10px; color:#8a7a6a; text-align:center;">*Un mozo se acercará con el comprobante</p>
  `;
- document.getElementById("backMain")?.addEventListener("click", () => { currentScreen = "main"; render(); });
+ document.getElementById("backMain")?.addEventListener("click", () => { currentScreen="main"; render(); });
  document.getElementById("requestBillBtn")?.addEventListener("click", () => {
  alert("✅ Cuenta solicitada. El mozo llevará el detalle a tu mesa.");
  });
  }
 
+ // ─── INIT ───────────────────────────────────────────────────────
  render();
 </script>
 </body>
