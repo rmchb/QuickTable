@@ -597,7 +597,7 @@
  if (currentUser) {
  greeting = `<div class="welcome-badge"><strong>✨ ¡Hola ${currentUser.nombre}!</strong><br><small>Tienes beneficios exclusivos por ser miembro. 🎁</small></div>`;
  } else {
- greeting = `<div class="alert">👋 Estás como invitado. <a href="#" id="inviteRegisterLink" style="color:#c2410c;font-weight:600;">Regístrate</a> para recibir promos.</div>`;
+ greeting = `<div class="alert">👋 Estás como invitado.</div>`;
  }
 
  let orderStatus = '';
@@ -627,12 +627,16 @@
  </div>
  ${orderStatus}
  ${orderPreview}
+ ${!currentUser ? `<div style="margin-top:12px; padding:12px; border-radius:18px; background:linear-gradient(135deg, rgba(194,65,12,0.06), rgba(220,90,30,0.03)); text-align:center; border:1px solid #f5e3d5;">
+ <p style="font-size:0.85rem; color:#5a4a3a;">📝 <strong>Regístrate</strong> y obtén <span style="color:#c2410c; font-weight:700;">promociones y descuentos</span> exclusivos</p>
+ <button id="goToRegisterBtn" class="btn-outline" style="margin-top:8px; padding:10px; font-size:0.85rem;">Crear cuenta</button>
+ </div>` : ''}
  `;
 
  document.getElementById("btnCarta")?.addEventListener("click", () => { currentScreen="menuCarta"; render(); });
  document.getElementById("btnMozo")?.addEventListener("click", () => { currentScreen="confirmMozo"; render(); });
  document.getElementById("btnCuenta")?.addEventListener("click", () => { currentScreen="confirmCuenta"; render(); });
- document.getElementById("inviteRegisterLink")?.addEventListener("click", (e) => { e.preventDefault(); currentScreen="auth"; render(); });
+ document.getElementById("goToRegisterBtn")?.addEventListener("click", () => { currentScreen="auth"; render(); });
  document.getElementById("preLink")?.addEventListener("click", (e) => { e.preventDefault(); currentScreen="preCuenta"; render(); });
  }
 
