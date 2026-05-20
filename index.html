@@ -242,37 +242,70 @@
  <h2 style="margin:8px 0 4px;">QuickTable</h2>
  <p style="color:#8a7a6a; font-size:0.9rem;">Tu menú digital</p>
  </div>
- <div class="option-grid">
+ <div class="option-grid" id="authButtons">
  <button id="loginBtn">🔐 Iniciar sesión</button>
  <button id="registerBtn" class="btn-outline">📝 Registrarse</button>
  <button id="guestBtn" class="btn-outline" style="border-color:#a08470; color:#a08470;">👤 Continuar como invitado</button>
  </div>
+
+ <!-- Login form -->
  <div id="loginForm" class="hidden" style="margin-top:16px;">
- <input type="text" id="usernameInput" placeholder="Nombre" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:8px;">
- <input type="email" id="emailInput" placeholder="Correo electrónico" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:12px;">
+ <input type="text" id="loginId" placeholder="ID de usuario" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:8px;">
+ <input type="password" id="loginPass" placeholder="Contraseña" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:12px;">
  <button id="doLoginBtn">Ingresar</button>
  <button id="cancelLoginBtn" class="btn-secondary">Cancelar</button>
+ </div>
+
+ <!-- Register form -->
+ <div id="registerForm" class="hidden" style="margin-top:16px;">
+ <input type="text" id="regId" placeholder="ID de usuario" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:8px;">
+ <input type="password" id="regPass" placeholder="Contraseña" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:8px;">
+ <input type="text" id="regName" placeholder="Nombre" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:8px;">
+ <input type="text" id="regLastName" placeholder="Apellido" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:8px;">
+ <input type="email" id="regEmail" placeholder="Correo electrónico" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:8px;">
+ <label style="font-size:0.85rem; color:#8a7a6a; margin-left:8px;">Fecha de nacimiento</label>
+ <input type="date" id="regBirth" style="width:100%; padding:12px; border-radius:48px; border:1px solid #e0d5ca; background:#faf6f2; margin-bottom:12px; color:#666;">
+ <button id="doRegisterBtn">Crear cuenta</button>
+ <button id="cancelRegisterBtn" class="btn-secondary">Cancelar</button>
  </div>
  `;
 
  document.getElementById("loginBtn")?.addEventListener("click", () => {
+ document.getElementById("authButtons")?.classList.add("hidden");
  document.getElementById("loginForm")?.classList.remove("hidden");
  });
  document.getElementById("cancelLoginBtn")?.addEventListener("click", () => {
+ document.getElementById("authButtons")?.classList.remove("hidden");
  document.getElementById("loginForm")?.classList.add("hidden");
  });
  document.getElementById("doLoginBtn")?.addEventListener("click", () => {
- const nombre = document.getElementById("usernameInput")?.value.trim();
- if (!nombre) { alert("Ingresa al menos tu nombre"); return; }
- currentUser = { nombre, email: document.getElementById("emailInput")?.value.trim() || "demo@mail.com", esPreferencial: true };
+ const id = document.getElementById("loginId")?.value.trim();
+ if (!id) { alert("Ingresa tu ID de usuario"); return; }
+ currentUser = { id, nombre: id, email: id + "@mail.com", esPreferencial: true };
  currentOrder = []; orderConfirmed = false;
  currentScreen = "main";
  render();
  });
  document.getElementById("registerBtn")?.addEventListener("click", () => {
- const nombre = prompt("Tu nombre:");
- if (!nombre) return;
- currentUser = { nombre, email: prompt("Correo:") || "nuevo@mail.com", esPreferencial: false };
+ document.getElementById("authButtons")?.classList.add("hidden");
+ document.getElementById("registerForm")?.classList.remove("hidden");
+ });
+ document.getElementById("cancelRegisterBtn")?.addEventListener("click", () => {
+ document.getElementById("authButtons")?.classList.remove("hidden");
+ document.getElementById("registerForm")?.classList.add("hidden");
+ });
+ document.getElementById("doRegisterBtn")?.addEventListener("click", () => {
+ const id = document.getElementById("regId")?.value.trim();
+ const pass = document.getElementById("regPass")?.value.trim();
+ const name = document.getElementById("regName")?.value.trim();
+ const lastName = document.getElementById("regLastName")?.value.trim();
+ const email = document.getElementById("regEmail")?.value.trim();
+ const birth = document.getElementById("regBirth")?.value;
+ if (!id || !pass || !name || !lastName || !email || !birth) {
+ alert("Completa todos los campos para registrarte.");
+ return;
+ }
+ currentUser = { id, nombre: name + " " + lastName, email, pass, birth, esPreferencial: false };
  currentOrder = []; orderConfirmed = false;
  currentScreen = "main";
  render();
