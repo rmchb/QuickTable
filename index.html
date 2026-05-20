@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+ <title>RestoApp - Cliente</title>
+ <style>
+ * {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+ }
+
+ body {
+ background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+ min-height: 100vh;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ padding: 20px;
+ }
+
+ /* Pantallas / vistas */
+ .screen {
+ background: white;
+ border-radius: 32px;
+ max-width: 480px;
+ width: 100%;
+ min-height: 600px;
+ box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+ overflow: hidden;
+ transition: all 0.2s ease;
+ display: flex;
+ flex-direction: column;
+ }
+
+ .header {
+ background: #f97316;
+ color: white;
+ padding: 20px;
+ text-align: center;
+ font-weight: bold;
+ font-size: 1.5rem;
+ }
+
+ .content {
+ flex: 1;
+ padding: 20px;
+ overflow-y: auto;
+ }
+
+ .footer {
+ padding: 15px;
+ background: #f8f9fa;
+ border-top: 1px solid #e9ecef;
+ font-size: 0.8rem;
+ text-align: center;
+ color: #6c757d;
+ }
+
+ button {
+ background: #f97316;
+ border: none;
+ color: white;
+ padding: 12px 20px;
+ border-radius: 48px;
+ font-weight: bold;
+ font-size: 1rem;
+ cursor: pointer;
+ transition: 0.2s;
+ width: 100%;
+ margin: 8px 0;
+ }
+
+ button:active {
+ transform: scale(0.97);
+ background: #e0650e;
+ }
+
+ .btn-secondary {
+ background: #6c757d;
+ }
+
+ .btn-outline {
+ background: transparent;
+ border: 2px solid #f97316;
+ color: #f97316;
+ }
+
+ .option-grid {
+ display: flex;
+ flex-direction: column;
+ gap: 16px;
+ margin: 20px 0;
+ }
+
+ .card-item {
+ background: #fff;
+ border-radius: 20px;
+ padding: 16px;
+ margin-bottom: 12px;
+ box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+ border: 1px solid #f1f1f1;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ }
+
+ .item-info h3 {
+ font-size: 1.1rem;
+ }
+
+ .item-info p {
+ font-size: 0.8rem;
+ color: #6c757d;
+ }
+
+ .price {
+ font-weight: bold;
+ color: #f97316;
+ }
+
+ .add-btn {
+ background: #f97316;
+ border: none;
+ color: white;
+ width: 40px;
+ height: 40px;
+ border-radius: 40px;
+ font-size: 1.5rem;
+ font-weight: bold;
+ }
+
+ .cart-summary {
+ background: #fef3e8;
+ border-radius: 20px;
+ padding: 12px;
+ margin-top: 20px;
+ }
+
+ .alert {
+ background: #e7f5e9;
+ color: #2b8c3e;
+ padding: 12px;
+ border-radius: 20px;
+ text-align: center;
+ margin-bottom: 20px;
+ }
+
+ .welcome-badge {
+ background: #f9731610;
+ padding: 12px;
+ border-radius: 24px;
+ margin-bottom: 20px;
+ border-left: 4px solid #f97316;
+ }
+
+ .hidden {
+ display: none;
+ }
+
+ .back-button {
+ background: none;
+ color: #f97316;
+ text-align: left;
+ font-weight: normal;
+ padding: 6px 0;
+ }
+
+ hr {
+ margin: 16px 0;
+ }
+ </style>
+</head>
+<body>
+<div class="screen" id="app">
+ <div class="header">🍽️ RestoApp</div>
+ <div class="content" id="mainContent">
+ <!-- Contenido dinámico -->
+ </div>
+ <div class="footer">Cliente | Mesa virtual</div>
+</div>
+
+<script>
+ // ---------- DATA DE CARTA (simulando variación según local - Restaurante "Sabores") ----------
+ const cartaData = {
+ entradas: [
+ { id: 1, nombre: "🍟 Papas bravas", precio: 4.90, descripcion: "Con salsa picante y alioli" },
+ { id: 2, nombre: "🥗 Ensalada César", precio: 6.50, descripcion: "Pollo, parmesano, aderezo César" }
+ ],
+ principales: [
+ { id: 3, nombre: "🍔 Hamburguesa Clásica", precio: 9.90, descripcion: "Carne 180gr, queso, lechuga, tomate" },
+ { id: 4, nombre: "🍝 Lomo saltado", precio: 12.90, descripcion: "Lomo, cebolla, tomate, papas, arroz" },
+ { id: 5, nombre: "🥩 Picanha a la parrilla", precio: 15.90, descripcion: "Con guarnición y chimichurri" }
+ ],
+ postres: [
+ { id: 6, nombre: "🍰 Tarta de queso", precio: 4.50, descripcion: "Con coulis de frutos rojos" },
+ { id: 7, nombre: "🍫 Volcán de chocolate", precio: 5.20, descripcion: "Con helado de vainilla" }
+ ],
+ bebidas: [
+ { id: 8, nombre: "🥤 Gaseosa", precio: 2.50, descripcion: "Personal 400ml" },
+ { id: 9, nombre: "🍺 Cerveza artesanal", precio: 4.00, descripcion: "Rubia 500ml" }
+ ]
+ };
+
+ // Estado global
+ let currentUser = null; // null = invitado, objeto con nombre si logueado
+ let currentOrder = []; // lista de { id, nombre, precio, cantidad }
+ let currentScreen = "auth"; // auth, main, menuCarta, confirmMozo, confirmCuenta
+
+ // Helper: renderizar vista actual
+ function render() {
+ const container = document.getElementById("mainContent");
+ if (currentScreen === "auth") {
+ renderAuth(container);
+ } else if (currentScreen === "main") {
+ renderMainMenu(container);
+ } else if (currentScreen === "menuCarta") {
+ renderCarta(container);
+ } else if (currentScreen === "confirmMozo") {
+ renderMozo(container);
+ } else if (currentScreen === "confirmCuenta") {
+ renderCuenta(container);
+ }
+ }
+
+ // Pantalla de login / invitado
+ function renderAuth(container) {
+ container.innerHTML = `
+ <div class="welcome-badge">
+ <p>🍴 Bienvenido a RestoApp</p>
+ <small>Inicia sesión para acceder a tus promociones personalizadas y ver tu historial de consumo.</small>
+ </div>
+ <div class="option-grid">
+ <button id="loginBtn">🔐 Iniciar sesión</button>
+ <button id="guestBtn" class="btn-outline">👤 Entrar como invitado</button>
+ </div>
+ <div id="loginForm" class="hidden" style="margin-top:20px">
+ <input type="text" id="usernameInput" placeholder="Nombre (ej: Ana)" style="width:100%; padding:12px; border-radius:48px; border:1px solid #ddd; margin-bottom:8px;">
+ <input type="email" id="emailInput" placeholder="Email (demo)" style="width:100%; padding:12px; border-radius:48px; border:1px solid #ddd; margin-bottom:12px;">
+ <button id="doLoginBtn">Ingresar</button>
+ <button id="cancelLoginBtn" class="btn-secondary">Cancelar</button>
+ </div>
+ `;
+
+ document.getElementById("loginBtn")?.addEventListener("click", () => {
+ const formDiv = document.getElementById("loginForm");
+ if (formDiv) formDiv.classList.remove("hidden");
+ });
+ document.getElementById("cancelLoginBtn")?.addEventListener("click", () => {
+ const formDiv = document.getElementById("loginForm");
+ if (formDiv) formDiv.classList.add("hidden");
+ });
+ document.getElementById("doLoginBtn")?.addEventListener("click", () => {
+ const nombre = document.getElementById("usernameInput")?.value.trim();
+ if (!nombre) {
+ alert("Ingresa al menos un nombre");
+ return;
+ }
+ // Simular usuario logueado (con datos de consumo para futuras ofertas)
+ currentUser = { nombre: nombre, email: document.getElementById("emailInput")?.value.trim() || "demo@mail.com", esPreferencial: true };
+ currentOrder = [];
+ currentScreen = "main";
+ render();
+ });
+ document.getElementById("guestBtn")?.addEventListener("click", () => {
+ currentUser = null;
+ currentOrder = [];
+ currentScreen = "main";
+ render();
+ });
+ }
+
+ // Menú principal: Mozo, Carta, Cuenta
+ function renderMainMenu(container) {
+ let userInfo = '';
+ if (currentUser) {
+ userInfo = `<div class="welcome-badge">
+ <strong>✨ ¡Hola ${currentUser.nombre}!</strong><br>
+ <small>Según tus consumos previos, tienes un 10% OFF en tu próxima bebida y un combo recomendado para ti. 🎁</small>
+ </div>`;
+ } else {
+ userInfo = `<div class="alert">👋 Estás como invitado. Regístrate para recibir promociones personalizadas según tus gustos.</div>`;
+ }
+
+ // Resumen de pedido actual (si tiene items)
+ let orderPreview = '';
+ if (currentOrder.length > 0) {
+ const totalItems = currentOrder.reduce((sum, item) => sum + item.cantidad, 0);
+ const totalPrice = currentOrder.reduce((sum, item) => sum + (item.precio * item.cantidad), 0).toFixed(2);
+ orderPreview = `<div class="cart-summary">
+ 🛒 Pedido actual: ${totalItems} productos · $${totalPrice}<br>
+ <small><em>Ve a "Carta" para agregar más</em></small>
+ </div>`;
+ } else {
+ orderPreview = `<div class="cart-summary">🛒 Tu pedido está vacío. Revisa la carta.</div>`;
+ }
+
+ container.innerHTML = `
+ ${userInfo}
+ <div class="option-grid">
+ <button id="btnMozo">🛎️ Llamar al mozo</button>
+ <button id="btnCarta">📖 Ver carta</button>
+ <button id="btnCuenta">💰 Pedir cuenta</button>
+ </div>
+ ${orderPreview}
+ `;
+ document.getElementById("btnMozo")?.addEventListener("click", () => {
+ currentScreen = "confirmMozo";
+ render();
+ });
+ document.getElementById("btnCarta")?.addEventListener("click", () => {
+ currentScreen = "menuCarta";
+ render();
+ });
+ document.getElementById("btnCuenta")?.addEventListener("click", () => {
+ currentScreen = "confirmCuenta";
+ render();
+ });
+ }
+
+ // Mostrar carta con categorías
+ function renderCarta(container) {
+ let cartHtml = `<button id="backToMain" class="back-button">← Volver al menú</button>`;
+ cartHtml += `<h3 style="margin:12px 0 0 0">📋 Nuestra Carta</h3>`;
+ // Categorías
+ const categorias = [
+ { nombre: "🥗 Entradas", items: cartaData.entradas },
+ { nombre: "🍽️ Platos principales", items: cartaData.principales },
+ { nombre: "🍰 Postres", items: cartaData.postres },
+ { nombre: "🥤 Bebidas", items: cartaData.bebidas }
+ ];
+
+ for (let cat of categorias) {
+ cartHtml += `<h4 style="margin-top:20px;">${cat.nombre}</h4>`;
+ for (let item of cat.items) {
+ cartHtml += `
+ <div class="card-item">
+ <div class="item-info">
+ <h3>${item.nombre}</h3>
+ <p>${item.descripcion}</p>
+ <span class="price">$${item.precio.toFixed(2)}</span>
+ </div>
+ <button class="add-btn" data-id="${item.id}" data-nombre="${item.nombre}" data-precio="${item.precio}">+</button>
+ </div>
+ `;
+ }
+ }
+
+ // Resumen del pedido actual
+ let cartSummary = `<div class="cart-summary" style="margin-top: 24px;"><strong>🧾 Mi pedido actual</strong>`;
+ if (currentOrder.length === 0) {
+ cartSummary += `<p>No hay productos agregados.</p>`;
+ } else {
+ currentOrder.forEach(item => {
+ cartSummary += `<div>${item.cantidad}x ${item.nombre} - $${(item.precio * item.cantidad).toFixed(2)}</div>`;
+ });
+ const total = currentOrder.reduce((sum, i) => sum + (i.precio * i.cantidad), 0).toFixed(2);
+ cartSummary += `<hr><strong>Total parcial: $${total}</strong>`;
+ }
+ cartSummary += `</div><button id="clearOrderBtn" class="btn-secondary" style="margin-top:12px;">🗑️ Vaciar pedido</button>`;
+
+ container.innerHTML = cartHtml + cartSummary;
+
+ // Eventos botones +
+ document.querySelectorAll(".add-btn").forEach(btn => {
+ btn.addEventListener("click", (e) => {
+ const id = parseInt(btn.dataset.id);
+ const nombre = btn.dataset.nombre;
+ const precio = parseFloat(btn.dataset.precio);
+ const existing = currentOrder.find(i => i.id === id);
+ if (existing) {
+ existing.cantidad += 1;
+ } else {
+ currentOrder.push({ id, nombre, precio, cantidad: 1 });
+ }
+ renderCarta(container); // re-render
+ });
+ });
+ document.getElementById("backToMain")?.addEventListener("click", () => {
+ currentScreen = "main";
+ render();
+ });
+ document.getElementById("clearOrderBtn")?.addEventListener("click", () => {
+ if (confirm("¿Vaciar todo el pedido?")) {
+ currentOrder = [];
+ renderCarta(container);
+ }
+ });
+ }
+
+ // Llamar mozo
+ function renderMozo(container) {
+ container.innerHTML = `
+ <button id="backMain" class="back-button">← Volver al menú</button>
+ <div style="text-align:center; margin-top: 40px;">
+ <div style="font-size: 4rem;">🛎️</div>
+ <h2>Solicitud enviada</h2>
+ <p>Un mozo se acercará a tu mesa en breve.</p>
+ <div class="alert">✅ Notificación enviada al sistema de atención.</div>
+ <button id="okMozoBtn" class="btn-outline">Entendido</button>
+ </div>
+ `;
+ document.getElementById("backMain")?.addEventListener("click", () => {
+ currentScreen = "main";
+ render();
+ });
+ document.getElementById("okMozoBtn")?.addEventListener("click", () => {
+ currentScreen = "main";
+ render();
+ });
+ }
+
+ // Pedir cuenta: muestra resumen y opción de solicitar
+ function renderCuenta(container) {
+ let total = currentOrder.reduce((sum, i) => sum + (i.precio * i.cantidad), 0).toFixed(2);
+ let itemsHtml = "";
+ if (currentOrder.length === 0) {
+ itemsHtml = "<p>No has agregado ningún producto aún.</p>";
+ } else {
+ currentOrder.forEach(item => {
+ itemsHtml += `<div>${item.cantidad}x ${item.nombre} = $${(item.precio * item.cantidad).toFixed(2)}</div>`;
+ });
+ }
+ container.innerHTML = `
+ <button id="backMain" class="back-button">← Volver al menú</button>
+ <h3>🧾 Resumen de consumo</h3>
+ ${itemsHtml}
+ <hr>
+ <h3>Total: $${total}</h3>
+ <div class="alert" style="margin-top:20px;">💳 Puedes pagar con tarjeta, efectivo o QR.</div>
+ <button id="requestBillBtn">Solicitar cuenta final</button>
+ <p style="font-size:0.75rem; margin-top:12px;">*Un mozo se acercará con el comprobante.</p>
+ `;
+ document.getElementById("backMain")?.addEventListener("click", () => {
+ currentScreen = "main";
+ render();
+ });
+ document.getElementById("requestBillBtn")?.addEventListener("click", () => {
+ alert("✅ Cuenta solicitada. El mozo llevará el detalle a tu mesa.");
+ // Podríamos resetear pedido si se paga, pero dejamos que el dueño luego vea lógica.
+ });
+ }
+
+ // inicializar
+ render();
+</script>
+</body>
+</html>
