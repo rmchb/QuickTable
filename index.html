@@ -413,15 +413,17 @@
  const logoutBtn = document.getElementById("headerLogoutBtn");
 
  if (currentUser) {
- logoutBtn.classList.remove("hidden");
+ logoutBtn.textContent = '🚪 Cerrar sesión';
+ logoutBtn.classList.remove('hidden');
  if (mozoFinalOrder && mozoFinalOrder.length > 0) {
- preBtn.classList.remove("hidden");
+ preBtn.classList.remove('hidden');
  } else {
- preBtn.classList.add("hidden");
+ preBtn.classList.add('hidden');
  }
  } else {
- logoutBtn.classList.add("hidden");
- preBtn.classList.add("hidden");
+ logoutBtn.textContent = '🏠 Menú principal';
+ logoutBtn.classList.remove('hidden');
+ preBtn.classList.add('hidden');
  }
 
  if (currentScreen === "auth") renderAuth(container);
@@ -451,8 +453,9 @@
  document.getElementById("headerLogoutBtn")?.addEventListener("click", () => {
  if (mozoCheckInterval) clearInterval(mozoCheckInterval);
  mozoCheckInterval = null;
- currentUser = null; currentOrder = []; confirmedOrder = []; mozoFinalOrder = null;
+ currentOrder = []; confirmedOrder = []; mozoFinalOrder = null;
  orderConfirmed = false; currentScreen = "auth";
+ if (currentUser) currentUser = null;
  render();
  });
  document.getElementById("headerPreBtn")?.addEventListener("click", () => {
