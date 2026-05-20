@@ -145,13 +145,6 @@
  background: #1f6d2e;
  }
 
- .btn-sm {
- padding: 8px 14px;
- font-size: 0.8rem;
- width: auto;
- margin: 0;
- }
-
  .option-grid {
  display: flex;
  flex-direction: column;
@@ -194,14 +187,20 @@
  font-size: 1rem;
  }
 
- .add-btn {
+ .qty-control {
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ }
+
+ .qty-btn {
  background: #c2410c;
  border: none;
  color: white;
- width: 38px;
- height: 38px;
- border-radius: 38px;
- font-size: 1.4rem;
+ width: 32px;
+ height: 32px;
+ border-radius: 32px;
+ font-size: 1.1rem;
  font-weight: 700;
  cursor: pointer;
  display: flex;
@@ -211,8 +210,26 @@
  transition: 0.15s;
  }
 
- .add-btn:active {
+ .qty-btn:active {
  transform: scale(0.9);
+ }
+
+ .qty-btn-minus {
+ background: #e8d5c5;
+ color: #5a4a3a;
+ box-shadow: none;
+ }
+
+ .qty-btn-minus:active {
+ background: #d5c0b0;
+ }
+
+ .qty-value {
+ font-weight: 700;
+ font-size: 1rem;
+ min-width: 24px;
+ text-align: center;
+ color: #3a2a1a;
  }
 
  .cart-summary {
@@ -357,6 +374,10 @@
  justify-content: space-between;
  align-items: center;
  }
+
+ .cat-emoji {
+ margin-right: 6px;
+ }
  </style>
 </head>
 <body>
@@ -374,38 +395,76 @@
 </div>
 
 <script>
- const cartaData = {
- entradas: [
- { id: 1, nombre: "Papas bravas", precio: 4.90, descripcion: "Con salsa picante y alioli", emoji: "🍟" },
- { id: 2, nombre: "Ensalada César", precio: 6.50, descripcion: "Pollo, parmesano, aderezo César", emoji: "🥗" }
- ],
- principales: [
- { id: 3, nombre: "Hamburguesa Clásica", precio: 9.90, descripcion: "Carne 180gr, queso, lechuga, tomate", emoji: "🍔" },
- { id: 4, nombre: "Lomo saltado", precio: 12.90, descripcion: "Lomo, cebolla, tomate, papas, arroz", emoji: "🍝" },
- { id: 5, nombre: "Picanha a la parrilla", precio: 15.90, descripcion: "Con guarnición y chimichurri", emoji: "🥩" }
- ],
- postres: [
- { id: 6, nombre: "Tarta de queso", precio: 4.50, descripcion: "Con coulis de frutos rojos", emoji: "🍰" },
- { id: 7, nombre: "Volcán de chocolate", precio: 5.20, descripcion: "Con helado de vainilla", emoji: "🍫" }
- ],
- bebidas: [
- { id: 8, nombre: "Gaseosa", precio: 2.50, descripcion: "Personal 400ml", emoji: "🥤" },
- { id: 9, nombre: "Cerveza artesanal", precio: 4.00, descripcion: "Rubia 500ml", emoji: "🍺" }
+ // ─── CARTA: CLASIFICACIÓN POR TIPO ────────────────────────────────
+ const cartaData = [
+ {
+ tipo: "Aperitivos",
+ emoji: "🥨",
+ items: [
+ { id: 1, nombre: "Papas bravas", precio: 4.90, descripcion: "Con salsa picante y alioli" },
+ { id: 2, nombre: "Ensalada César", precio: 6.50, descripcion: "Pollo, parmesano, aderezo César" }
  ]
- };
+ },
+ {
+ tipo: "Menú",
+ emoji: "📋",
+ items: [
+ { id: 3, nombre: "Hamburguesa Clásica", precio: 9.90, descripcion: "Carne 180gr, queso, lechuga, tomate" }
+ ]
+ },
+ {
+ tipo: "Platos fuertes",
+ emoji: "🔥",
+ items: [
+ { id: 4, nombre: "Lomo saltado", precio: 12.90, descripcion: "Lomo, cebolla, tomate, papas, arroz" },
+ { id: 5, nombre: "Picanha a la parrilla", precio: 15.90, descripcion: "Con guarnición y chimichurri" }
+ ]
+ },
+ {
+ tipo: "Acompañamientos",
+ emoji: "🥔",
+ items: [
+ { id: 10, nombre: "Papas fritas", precio: 3.50, descripcion: "Porción individual" },
+ { id: 11, nombre: "Arroz blanco", precio: 2.50, descripcion: "Porción individual" }
+ ]
+ },
+ {
+ tipo: "Bebidas",
+ emoji: "🥤",
+ items: [
+ { id: 8, nombre: "Gaseosa", precio: 2.50, descripcion: "Personal 400ml" },
+ { id: 9, nombre: "Cerveza artesanal", precio: 4.00, descripcion: "Rubia 500ml" }
+ ]
+ },
+ {
+ tipo: "Postres",
+ emoji: "🍰",
+ items: [
+ { id: 6, nombre: "Tarta de queso", precio: 4.50, descripcion: "Con coulis de frutos rojos" },
+ { id: 7, nombre: "Volcán de chocolate", precio: 5.20, descripcion: "Con helado de vainilla" }
+ ]
+ }
+ ];
 
  // ─── ESTADO ─────────────────────────────────────────────────────
  let currentUser = null;
- let currentOrder = [];          // { id, nombre, precio, cantidad, emoji }
- let confirmedOrder = [];        // copia que "envía" al mozo (simula confirmación)
- let mozoFinalOrder = null;     // lo que el mozo reconfirma (simulado con delay)
+ let currentOrder = [];          // { id, nombre, precio, cantidad, tipo }
+ let confirmedOrder = [];
+ let mozoFinalOrder = null;
  let currentScreen = "auth";
  let orderConfirmed = false;
- let mozoCheckInterval = null;
 
  // helpers
  function totalItems(arr) { return arr.reduce((s,i) => s + i.cantidad, 0); }
  function totalPrice(arr) { return arr.reduce((s,i) => s + (i.precio * i.cantidad), 0); }
+
+ function findItem(id) {
+ for (let cat of cartaData) {
+ const found = cat.items.find(i => i.id === id);
+ if (found) return { ...found, tipo: cat.tipo };
+ }
+ return null;
+ }
 
  function render() {
  const container = document.getElementById("mainContent");
@@ -436,11 +495,9 @@
 
  // ─── SIMULACIÓN MOZO ────────────────────────────────────────────
  function simularConfirmacionMozo() {
- // El mozo "confirma" con algunos cambios aleatorios
  mozoFinalOrder = confirmedOrder.map(item => {
- // 30% de probabilidad que el mozo modifique la cantidad
  if (Math.random() < 0.3) {
- const diff = Math.floor(Math.random() * 3) - 1; // -1, 0, o +1
+ const diff = Math.floor(Math.random() * 3) - 1;
  const newCant = Math.max(0, item.cantidad + diff);
  return { ...item, cantidad: newCant, modificado: diff !== 0 };
  }
@@ -451,18 +508,13 @@
 
  // ─── HEADER EVENTS ──────────────────────────────────────────────
  document.getElementById("headerLogoutBtn")?.addEventListener("click", () => {
- if (mozoCheckInterval) clearInterval(mozoCheckInterval);
- mozoCheckInterval = null;
  currentOrder = []; confirmedOrder = []; mozoFinalOrder = null;
  orderConfirmed = false; currentScreen = "auth";
  if (currentUser) currentUser = null;
  render();
  });
  document.getElementById("headerPreBtn")?.addEventListener("click", () => {
- if (mozoFinalOrder) {
- currentScreen = "preCuenta";
- render();
- }
+ if (mozoFinalOrder) { currentScreen = "preCuenta"; render(); }
  });
 
  // ─── AUTH ───────────────────────────────────────────────────────
@@ -554,7 +606,7 @@
  orderStatus = `<div class="alert">✅ Pedido enviado al mozo. Espera reconfirmación.</div>`;
  if (mozoFinalOrder) {
  const diff = totalItems(mozoFinalOrder) !== totalItems(confirmedOrder);
- orderStatus = `<div class="alert" style="background:#fef6ed;color:#8a5a2a;">🛎️ Mozo reconfirmó tu pedido. ${diff ? 'Algunos items fueron ajustados.' : ''} <a href="#" id="preLink" style="color:#c2410c;font-weight:600;">Ver pre-cuenta</a></div>`;
+ orderStatus = `<div class="alert" style="background:#fef6ed;color:#8a5a2a;">🛎️ Mozo reconfirmó tu pedido. ${diff ? 'Algunos items ajustados.' : ''} <a href="#" id="preLink" style="color:#c2410c;font-weight:600;">Ver pre-cuenta</a></div>`;
  }
  }
 
@@ -562,7 +614,7 @@
  if (currentOrder.length > 0) {
  const qty = totalItems(currentOrder);
  const total = totalPrice(currentOrder).toFixed(2);
- orderPreview = `<div class="cart-summary">🛒 Pedido: ${qty} productos · $${total}</div>`;
+ orderPreview = `<div class="cart-summary">🛒 Pedido: ${qty} productos · S/ ${total}</div>`;
  } else {
  orderPreview = `<div class="cart-summary" style="color:#8a7a6a;">🛒 Tu pedido está vacío</div>`;
  }
@@ -590,23 +642,22 @@
  let html = `<button id="backToMain" class="back-button">← Volver</button>`;
  html += `<div class="section-title" style="margin-top:8px;">📋 Nuestra Carta</div>`;
 
- const categorias = [
- { nombre: "Entradas", items: cartaData.entradas },
- { nombre: "Platos principales", items: cartaData.principales },
- { nombre: "Postres", items: cartaData.postres },
- { nombre: "Bebidas", items: cartaData.bebidas }
- ];
-
- for (let cat of categorias) {
- html += `<div class="cat-header">${cat.nombre}</div>`;
+ for (let cat of cartaData) {
+ html += `<div class="cat-header"><span class="cat-emoji">${cat.emoji}</span>${cat.tipo}</div>`;
  for (let item of cat.items) {
+ const inOrder = currentOrder.find(o => o.id === item.id);
+ const qty = inOrder ? inOrder.cantidad : 0;
  html += `<div class="card-item">
  <div class="item-info">
- <h3>${item.emoji} ${item.nombre}</h3>
+ <h3>${item.nombre}</h3>
  <p>${item.descripcion}</p>
  <span class="price">S/ ${item.precio.toFixed(2)}</span>
  </div>
- <button class="add-btn" data-id="${item.id}" data-nombre="${item.nombre}" data-precio="${item.precio}" data-emoji="${item.emoji}">+</button>
+ <div class="qty-control">
+ ${qty > 0 ? `<button class="qty-btn qty-btn-minus" data-id="${item.id}" data-action="minus">−</button>` : ''}
+ ${qty > 0 ? `<span class="qty-value">${qty}</span>` : ''}
+ <button class="qty-btn" data-id="${item.id}" data-action="plus">+</button>
+ </div>
  </div>`;
  }
  }
@@ -618,7 +669,7 @@
  } else {
  currentOrder.forEach(item => {
  summary += `<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
- <span>${item.emoji} ${item.cantidad}x ${item.nombre}</span>
+ <span>${item.cantidad}x ${item.nombre}</span>
  <span style="font-weight:600;color:#c2410c;">S/ ${(item.precio * item.cantidad).toFixed(2)}</span>
  </div>`;
  });
@@ -633,15 +684,22 @@
 
  container.innerHTML = html;
 
- document.querySelectorAll(".add-btn").forEach(btn => {
+ document.querySelectorAll(".qty-btn").forEach(btn => {
  btn.addEventListener("click", () => {
  const id = parseInt(btn.dataset.id);
- const nombre = btn.dataset.nombre;
- const precio = parseFloat(btn.dataset.precio);
- const emoji = btn.dataset.emoji || "🍽️";
- const existing = currentOrder.find(i => i.id === id);
+ const action = btn.dataset.action;
+ const item = findItem(id);
+ if (!item) return;
+ const existing = currentOrder.find(o => o.id === id);
+ if (action === "plus") {
  if (existing) existing.cantidad += 1;
- else currentOrder.push({ id, nombre, precio, cantidad: 1, emoji });
+ else currentOrder.push({ id, nombre: item.nombre, precio: item.precio, cantidad: 1, tipo: item.tipo });
+ } else if (action === "minus" && existing) {
+ existing.cantidad -= 1;
+ if (existing.cantidad <= 0) {
+ currentOrder = currentOrder.filter(o => o.id !== id);
+ }
+ }
  orderConfirmed = false;
  renderCarta(container);
  });
@@ -652,10 +710,8 @@
  });
  document.getElementById("sendOrderBtn")?.addEventListener("click", () => {
  if (currentOrder.length === 0) { alert("Agrega productos primero."); return; }
- // Enviar copia al "mozo"
  confirmedOrder = currentOrder.map(i => ({ ...i }));
  orderConfirmed = true;
- // Simular que el mozo responde entre 5 y 12 segundos
  setTimeout(() => simularConfirmacionMozo(), 5000 + Math.random() * 7000);
  alert("✅ Pedido enviado. El mozo pasará a reconfirmar.");
  currentScreen = "main"; render();
@@ -676,41 +732,25 @@
 
  html += `<p style="color:#8a7a6a; font-size:0.85rem; margin-bottom:16px;">Items reconfirmados por el mozo</p>`;
 
- // Lo que pediste originalmente
+ // Lo que pediste
  html += `<div style="font-size:0.85rem; font-weight:600; color:#5a4a3a; margin-bottom:8px;">📝 Pediste:</div>`;
  confirmedOrder.forEach(item => {
- html += `<div class="card-item-pre">
- <div style="display:flex;justify-content:space-between;">
- <span>${item.emoji} ${item.cantidad}x ${item.nombre}</span>
- <span style="color:#c2410c;font-weight:600;">S/ ${(item.precio * item.cantidad).toFixed(2)}</span>
- </div>
- </div>`;
+ html += `<div class="card-item-pre"><div style="display:flex;justify-content:space-between;"><span>${item.cantidad}x ${item.nombre}</span><span style="color:#c2410c;font-weight:600;">S/ ${(item.precio * item.cantidad).toFixed(2)}</span></div></div>`;
  });
 
  html += `<hr>`;
 
- // Lo que el mozo reconfirmó
+ // Lo reconfirmado
  let anyModified = false;
  html += `<div style="font-size:0.85rem; font-weight:600; color:#5a4a3a; margin-bottom:8px;">✅ Reconﬁrmado por mozo:</div>`;
  mozoFinalOrder.forEach(item => {
  const cls = item.modificado ? "pre-item-modified" : "pre-item-confirmed";
  if (item.modificado) anyModified = true;
- html += `<div class="card-item-pre ${cls}">
- <div style="display:flex;justify-content:space-between;align-items:center;">
- <div>
- <span>${item.emoji} ${item.cantidad}x ${item.nombre}</span>
- ${item.modificado ? '<span style="font-size:0.7rem;color:#c2410c;font-weight:600;margin-left:8px;">(ajustado)</span>' : ''}
- </div>
- <span style="color:#2b8c3e;font-weight:600;">S/ ${(item.precio * item.cantidad).toFixed(2)}</span>
- </div>
- </div>`;
+ html += `<div class="card-item-pre ${cls}"><div style="display:flex;justify-content:space-between;align-items:center;"><div><span>${item.cantidad}x ${item.nombre}</span>${item.modificado ? '<span style="font-size:0.7rem;color:#c2410c;font-weight:600;margin-left:8px;">(ajustado)</span>' : ''}</div><span style="color:#2b8c3e;font-weight:600;">S/ ${(item.precio * item.cantidad).toFixed(2)}</span></div></div>`;
  });
 
  const total = totalPrice(mozoFinalOrder).toFixed(2);
- html += `<div class="cart-summary" style="margin-top:16px;">
- <div class="total-row"><strong>Total final</strong><strong style="color:#c2410c;">S/ ${total}</strong></div>
- </div>`;
-
+ html += `<div class="cart-summary" style="margin-top:16px;"><div class="total-row"><strong>Total final</strong><strong style="color:#c2410c;">S/ ${total}</strong></div></div>`;
  if (anyModified) {
  html += `<div class="alert" style="background:#fef6ed;color:#8a5a2a;">ℹ️ Algunas cantidades fueron ajustadas por el mozo según disponibilidad.</div>`;
  }
@@ -744,7 +784,7 @@
  itemsHtml = "<div class='empty-state'><div>🧾</div><p>No hay productos en tu cuenta</p></div>";
  } else {
  items.forEach(item => {
- itemsHtml += `<div class="card-item-pre"><div style="display:flex;justify-content:space-between;"><span>${item.emoji || '🍽️'} ${item.cantidad}x ${item.nombre}</span><span style="font-weight:600;">S/ ${(item.precio * item.cantidad).toFixed(2)}</span></div></div>`;
+ itemsHtml += `<div class="card-item-pre"><div style="display:flex;justify-content:space-between;"><span>${item.cantidad}x ${item.nombre}</span><span style="font-weight:600;">S/ ${(item.precio * item.cantidad).toFixed(2)}</span></div></div>`;
  });
  }
  container.innerHTML = `
