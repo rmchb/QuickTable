@@ -6,843 +6,162 @@
  <title>QuickTable - Cliente</title>
  <style>
  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap');
-
- * {
- margin: 0;
- padding: 0;
- box-sizing: border-box;
- }
-
- body {
- min-height: 100vh;
- display: flex;
- justify-content: center;
- align-items: center;
- padding: 16px;
- background: #f5ede4;
- background-image:
- radial-gradient(ellipse at 10% 20%, rgba(200, 80, 30, 0.06) 0%, transparent 50%),
- radial-gradient(ellipse at 90% 80%, rgba(180, 120, 50, 0.08) 0%, transparent 50%);
- font-family: 'Inter', system-ui, -apple-system, sans-serif;
- }
-
- .screen {
- background: #fffcf9;
- border-radius: 28px;
- max-width: 460px;
- width: 100%;
- min-height: 640px;
- box-shadow: 0 4px 24px rgba(120, 60, 20, 0.10), 0 12px 48px rgba(120, 60, 20, 0.06);
- overflow: hidden;
- display: flex;
- flex-direction: column;
- }
-
- .header {
- background: #c2410c;
- background: linear-gradient(135deg, #c2410c 0%, #dc5a1e 50%, #ea6b2e 100%);
- color: white;
- padding: 18px 20px;
- display: flex;
- justify-content: space-between;
- align-items: center;
- font-weight: 800;
- font-size: 1.3rem;
- letter-spacing: -0.3px;
- }
-
- .header-title {
- display: flex;
- align-items: center;
- gap: 8px;
- }
-
- .header-actions {
- display: flex;
- gap: 6px;
- }
-
- .header-btn {
- background: rgba(255,255,255,0.2);
- border: none;
- color: white;
- padding: 6px 14px;
- border-radius: 48px;
- font-size: 0.75rem;
- font-weight: 600;
- cursor: pointer;
- transition: 0.15s;
- white-space: nowrap;
- }
-
- .header-btn:hover {
- background: rgba(255,255,255,0.3);
- }
-
- .content {
- flex: 1;
- padding: 20px;
- overflow-y: auto;
- }
-
- .footer {
- padding: 12px 20px;
- background: #faf3ed;
- border-top: 1px solid #f0e2d5;
- font-size: 0.75rem;
- text-align: center;
- color: #a08470;
- font-weight: 500;
- }
-
- button {
- background: #c2410c;
- border: none;
- color: white;
- padding: 14px 20px;
- border-radius: 48px;
- font-weight: 700;
- font-size: 0.95rem;
- cursor: pointer;
- transition: 0.15s;
- width: 100%;
- margin: 6px 0;
- letter-spacing: -0.2px;
- box-shadow: 0 2px 8px rgba(194, 65, 12, 0.15);
- }
-
- button:active {
- transform: scale(0.97);
- background: #a3350a;
- }
-
- .btn-secondary {
- background: #8a7a6a;
- box-shadow: none;
- }
-
- .btn-secondary:active {
- background: #6e5f50;
- }
-
- .btn-outline {
- background: transparent;
- border: 2px solid #c2410c;
- color: #c2410c;
- box-shadow: none;
- }
-
- .btn-outline:active {
- background: rgba(194, 65, 12, 0.06);
- }
-
- .btn-success {
- background: #2b8c3e;
- box-shadow: 0 2px 8px rgba(43, 140, 62, 0.15);
- }
-
- .btn-success:active {
- background: #1f6d2e;
- }
-
- .option-grid {
- display: flex;
- flex-direction: column;
- gap: 10px;
- margin: 16px 0;
- }
-
- .card-item {
- background: white;
- border-radius: 18px;
- padding: 14px 16px;
- margin-bottom: 10px;
- box-shadow: 0 1px 4px rgba(120, 60, 20, 0.06);
- border: 1px solid #f5e8de;
- display: flex;
- justify-content: space-between;
- align-items: center;
- transition: 0.15s;
- }
-
- .card-item:hover {
- border-color: #e8d5c5;
- box-shadow: 0 2px 8px rgba(120, 60, 20, 0.08);
- }
-
- .item-info h3 {
- font-size: 1rem;
- font-weight: 700;
- margin-bottom: 2px;
- }
-
- .item-info p {
- font-size: 0.75rem;
- color: #8a7a6a;
- }
-
- .price {
- font-weight: 700;
- color: #c2410c;
- font-size: 1rem;
- }
-
- .qty-control {
- display: flex;
- align-items: center;
- gap: 8px;
- }
-
- .qty-btn {
- background: #c2410c;
- border: none;
- color: white;
- width: 32px;
- height: 32px;
- border-radius: 32px;
- font-size: 1.1rem;
- font-weight: 700;
- cursor: pointer;
- display: flex;
- align-items: center;
- justify-content: center;
- box-shadow: 0 2px 6px rgba(194, 65, 12, 0.2);
- transition: 0.15s;
- }
-
- .qty-btn:active {
- transform: scale(0.9);
- }
-
- .qty-btn-minus {
- background: #e8d5c5;
- color: #5a4a3a;
- box-shadow: none;
- }
-
- .qty-btn-minus:active {
- background: #d5c0b0;
- }
-
- .qty-value {
- font-weight: 700;
- font-size: 1rem;
- min-width: 24px;
- text-align: center;
- color: #3a2a1a;
- }
-
- .cart-summary {
- background: #fef6ed;
- border-radius: 18px;
- padding: 16px;
- margin-top: 16px;
- border: 1px solid #f5e3d5;
- }
-
- .alert {
- background: #eaf7ed;
- color: #1f6d2e;
- padding: 12px;
- border-radius: 18px;
- text-align: center;
- margin-bottom: 16px;
- font-weight: 500;
- font-size: 0.85rem;
- }
-
- .welcome-badge {
- background: linear-gradient(135deg, rgba(194, 65, 12, 0.06), rgba(220, 90, 30, 0.03));
- padding: 14px;
- border-radius: 18px;
- margin-bottom: 16px;
- border-left: 4px solid #c2410c;
- }
-
- .hidden {
- display: none !important;
- }
-
- .back-button {
- background: none;
- color: #c2410c;
- text-align: left;
- font-weight: 600;
- padding: 6px 0;
- width: auto;
- box-shadow: none;
- margin: 0;
- }
-
- input, select {
- width: 100%;
- padding: 12px 16px;
- border-radius: 48px;
- border: 1.5px solid #e8d5c5;
- background: #fcf8f5;
- font-size: 0.9rem;
- margin-bottom: 8px;
- outline: none;
- transition: 0.15s;
- font-family: 'Inter', system-ui, sans-serif;
- }
-
- input:focus {
- border-color: #c2410c;
- background: white;
- box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.08);
- }
-
- input::placeholder {
- color: #b8a898;
- }
-
- hr {
- margin: 14px 0;
- border: none;
- border-top: 1px solid #f0e2d5;
- }
-
- .badge {
- display: inline-block;
- background: #c2410c;
- color: white;
- font-size: 0.7rem;
- font-weight: 700;
- padding: 2px 10px;
- border-radius: 48px;
- }
-
- .cat-header {
- font-size: 1rem;
- font-weight: 700;
- color: #5a4a3a;
- margin: 20px 0 8px 0;
- padding-bottom: 6px;
- border-bottom: 2px solid #f5e8de;
- }
-
- .section-title {
- font-size: 1.1rem;
- font-weight: 700;
- color: #3a2a1a;
- margin-bottom: 12px;
- }
-
- .card-item-pre {
- background: white;
- border-radius: 18px;
- padding: 14px 16px;
- margin-bottom: 8px;
- box-shadow: 0 1px 4px rgba(120, 60, 20, 0.06);
- border: 1px solid #f5e8de;
- }
-
- .pre-item-confirmed {
- border-left: 4px solid #2b8c3e;
- }
-
- .pre-item-modified {
- border-left: 4px solid #c2410c;
- }
-
- .total-row {
- display: flex;
- justify-content: space-between;
- align-items: center;
- padding: 8px 0;
- font-weight: 600;
- }
-
- .total-row strong {
- font-size: 1.1rem;
- }
-
- .empty-state {
- text-align: center;
- padding: 40px 0;
- color: #b8a898;
- }
-
- .empty-state div {
- font-size: 3rem;
- margin-bottom: 12px;
- }
-
- .order-header {
- display: flex;
- justify-content: space-between;
- align-items: center;
- }
-
- .cat-emoji {
- margin-right: 6px;
- }
-
- /* Layout carta: dos columnas en pantallas grandes */
- .carta-layout {
- display: flex;
- flex-direction: column;
- gap: 16px;
- }
-
- .carta-items {
- flex: 1;
- min-width: 0;
- }
-
- .carta-sidebar {
- flex-shrink: 0;
- }
-
- @media (min-width: 600px) {
- .carta-layout {
- flex-direction: row;
- align-items: flex-start;
- }
- .carta-items {
- flex: 1;
- }
- .carta-sidebar {
- width: 240px;
- position: sticky;
- top: 0;
- }
- .carta-sidebar .cart-summary {
- margin-top: 0;
- }
- }
+ * { margin:0; padding:0; box-sizing:border-box; }
+ body { min-height:100vh; display:flex; justify-content:center; align-items:center; padding:16px; background:#f5ede4; background-image:radial-gradient(ellipse at 10% 20%, rgba(200,80,30,0.06) 0%, transparent 50%), radial-gradient(ellipse at 90% 80%, rgba(180,120,50,0.08) 0%, transparent 50%); font-family:'Inter',system-ui,-apple-system,sans-serif; }
+ .screen { background:#fffcf9; border-radius:28px; max-width:460px; width:100%; min-height:640px; box-shadow:0 4px 24px rgba(120,60,20,0.10),0 12px 48px rgba(120,60,20,0.06); overflow:hidden; display:flex; flex-direction:column; }
+ .header { background:linear-gradient(135deg,#c2410c 0%,#dc5a1e 50%,#ea6b2e 100%); color:white; padding:18px 20px; display:flex; justify-content:space-between; align-items:center; font-weight:800; font-size:1.3rem; letter-spacing:-0.3px; }
+ .header-title { display:flex; align-items:center; gap:8px; }
+ .header-actions { display:flex; gap:6px; }
+ .header-btn { background:rgba(255,255,255,0.2); border:none; color:white; padding:6px 14px; border-radius:48px; font-size:0.75rem; font-weight:600; cursor:pointer; transition:0.15s; white-space:nowrap; }
+ .header-btn:hover { background:rgba(255,255,255,0.3); }
+ .content { flex:1; padding:20px; overflow-y:auto; }
+ .footer { padding:12px 20px; background:#faf3ed; border-top:1px solid #f0e2d5; font-size:0.75rem; text-align:center; color:#a08470; font-weight:500; }
+ button { background:#c2410c; border:none; color:white; padding:14px 20px; border-radius:48px; font-weight:700; font-size:0.95rem; cursor:pointer; transition:0.15s; width:100%; margin:6px 0; box-shadow:0 2px 8px rgba(194,65,12,0.15); }
+ button:active { transform:scale(0.97); background:#a3350a; }
+ .btn-secondary { background:#8a7a6a; box-shadow:none; }
+ .btn-outline { background:transparent; border:2px solid #c2410c; color:#c2410c; box-shadow:none; }
+ .btn-success { background:#2b8c3e; box-shadow:0 2px 8px rgba(43,140,62,0.15); }
+ .option-grid { display:flex; flex-direction:column; gap:10px; margin:16px 0; }
+ .card-item { background:white; border-radius:18px; padding:14px 16px; margin-bottom:10px; box-shadow:0 1px 4px rgba(120,60,20,0.06); border:1px solid #f5e8de; display:flex; justify-content:space-between; align-items:center; }
+ .item-info h3 { font-size:1rem; font-weight:700; margin-bottom:2px; }
+ .item-info p { font-size:0.75rem; color:#8a7a6a; }
+ .price { font-weight:700; color:#c2410c; font-size:1rem; }
+ .qty-control { display:flex; align-items:center; gap:8px; }
+ .qty-btn { background:#c2410c; border:none; color:white; width:32px; height:32px; border-radius:32px; font-size:1.1rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(194,65,12,0.2); }
+ .qty-btn:active { transform:scale(0.9); }
+ .qty-btn-minus { background:#e8d5c5; color:#5a4a3a; box-shadow:none; }
+ .qty-value { font-weight:700; font-size:1rem; min-width:24px; text-align:center; color:#3a2a1a; }
+ .cart-summary { background:#fef6ed; border-radius:18px; padding:16px; border:1px solid #f5e3d5; }
+ .alert { background:#eaf7ed; color:#1f6d2e; padding:12px; border-radius:18px; text-align:center; margin-bottom:16px; font-weight:500; font-size:0.85rem; }
+ .alert-warn { background:#fef6ed; color:#8a5a2a; }
+ .welcome-badge { background:linear-gradient(135deg,rgba(194,65,12,0.06),rgba(220,90,30,0.03)); padding:14px; border-radius:18px; margin-bottom:16px; border-left:4px solid #c2410c; }
+ .hidden { display:none !important; }
+ .back-button { background:none; color:#c2410c; text-align:left; font-weight:600; padding:6px 0; width:auto; box-shadow:none; margin:0; }
+ input,select { width:100%; padding:12px 16px; border-radius:48px; border:1.5px solid #e8d5c5; background:#fcf8f5; font-size:0.9rem; margin-bottom:8px; outline:none; font-family:'Inter',system-ui,sans-serif; }
+ input:focus { border-color:#c2410c; background:white; box-shadow:0 0 0 3px rgba(194,65,12,0.08); }
+ hr { margin:14px 0; border:none; border-top:1px solid #f0e2d5; }
+ .badge { display:inline-block; background:#c2410c; color:white; font-size:0.7rem; font-weight:700; padding:2px 10px; border-radius:48px; }
+ .cat-header { font-size:1rem; font-weight:700; color:#5a4a3a; margin:20px 0 8px 0; padding-bottom:6px; border-bottom:2px solid #f5e8de; }
+ .section-title { font-size:1.1rem; font-weight:700; color:#3a2a1a; margin-bottom:12px; }
+ .card-item-pre { background:white; border-radius:18px; padding:14px 16px; margin-bottom:8px; box-shadow:0 1px 4px rgba(120,60,20,0.06); border:1px solid #f5e8de; }
+ .pre-item-confirmed { border-left:4px solid #2b8c3e; }
+ .pre-item-modified { border-left:4px solid #c2410c; }
+ .total-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; font-weight:600; }
+ .empty-state { text-align:center; padding:40px 0; color:#b8a898; }
+ .empty-state div { font-size:3rem; margin-bottom:12px; }
+ .order-header { display:flex; justify-content:space-between; align-items:center; }
+ .cat-emoji { margin-right:6px; }
+ .pedido-card { background:white; border-radius:18px; padding:14px 16px; margin-bottom:10px; box-shadow:0 1px 4px rgba(120,60,20,0.06); border:1px solid #f5e8de; }
+ .pedido-card-extra { border-left:4px solid #c2410c; }
+ .pedido-card-base { border-left:4px solid #2b8c3e; }
+ .pedido-tag { display:inline-block; font-size:0.65rem; font-weight:600; padding:2px 8px; border-radius:48px; margin-left:8px; }
+ .pedido-tag-base { background:#eaf7ed; color:#1f6d2e; }
+ .pedido-tag-extra { background:#fef6ed; color:#c2410c; }
+ .bottom-actions { padding-top:12px; }
+ .carta-layout { display:flex; flex-direction:column; gap:16px; }
+ .carta-items { flex:1; min-width:0; }
+ .carta-sidebar { flex-shrink:0; }
+ @media (min-width:600px) { .carta-layout { flex-direction:row; align-items:flex-start; } .carta-items { flex:1; } .carta-sidebar { width:240px; position:sticky; top:0; } }
  </style>
 </head>
 <body>
 <div class="screen" id="app">
- <div class="header">
- <div class="header-title">🍽️ QuickTable</div>
- <div class="header-actions" id="headerActions">
- <button id="headerPreBtn" class="header-btn hidden">📋 Pre-cuenta</button>
- <button id="headerLogoutBtn" class="header-btn hidden">🚪 Salir</button>
- </div>
- </div>
- <div class="content" id="mainContent">
- </div>
+ <div class="header"><div class="header-title">🍽️ QuickTable</div><div class="header-actions"><button id="headerPreBtn" class="header-btn hidden">📋 Pre-cuenta</button><button id="headerLogoutBtn" class="header-btn hidden">🚪 Salir</button></div></div>
+ <div class="content" id="mainContent"></div>
  <div class="footer">Cliente · Mesa virtual</div>
 </div>
-
 <script>
- // ─── CARTA: CLASIFICACIÓN POR TIPO ────────────────────────────────
- const cartaData = [
- {
- tipo: "Aperitivos",
- emoji: "🥨",
- items: [
- { id: 1, nombre: "Papas bravas", precio: 4.90, descripcion: "Con salsa picante y alioli" },
- { id: 2, nombre: "Ensalada César", precio: 6.50, descripcion: "Pollo, parmesano, aderezo César" }
- ]
- },
- {
- tipo: "Menú",
- emoji: "📋",
- items: [
- { id: 3, nombre: "Hamburguesa Clásica", precio: 9.90, descripcion: "Carne 180gr, queso, lechuga, tomate" }
- ]
- },
- {
- tipo: "Platos fuertes",
- emoji: "🔥",
- items: [
- { id: 4, nombre: "Lomo saltado", precio: 12.90, descripcion: "Lomo, cebolla, tomate, papas, arroz" },
- { id: 5, nombre: "Picanha a la parrilla", precio: 15.90, descripcion: "Con guarnición y chimichurri" }
- ]
- },
- {
- tipo: "Acompañamientos",
- emoji: "🥔",
- items: [
- { id: 10, nombre: "Papas fritas", precio: 3.50, descripcion: "Porción individual" },
- { id: 11, nombre: "Arroz blanco", precio: 2.50, descripcion: "Porción individual" }
- ]
- },
- {
- tipo: "Bebidas",
- emoji: "🥤",
- items: [
- { id: 8, nombre: "Gaseosa", precio: 2.50, descripcion: "Personal 400ml" },
- { id: 9, nombre: "Cerveza artesanal", precio: 4.00, descripcion: "Rubia 500ml" }
- ]
- },
- {
- tipo: "Postres",
- emoji: "🍰",
- items: [
- { id: 6, nombre: "Tarta de queso", precio: 4.50, descripcion: "Con coulis de frutos rojos" },
- { id: 7, nombre: "Volcán de chocolate", precio: 5.20, descripcion: "Con helado de vainilla" }
- ]
- }
- ];
-
- // ─── ESTADO ─────────────────────────────────────────────────────
- let currentUser = null;
- let currentOrder = [];          // { id, nombre, precio, cantidad, tipo }
- let confirmedOrder = [];
- let mozoFinalOrder = null;
- let currentScreen = "auth";
- let orderConfirmed = false;
-
- // helpers
- function totalItems(arr) { return arr.reduce((s,i) => s + i.cantidad, 0); }
- function totalPrice(arr) { return arr.reduce((s,i) => s + (i.precio * i.cantidad), 0); }
-
- function findItem(id) {
- for (let cat of cartaData) {
- const found = cat.items.find(i => i.id === id);
- if (found) return { ...found, tipo: cat.tipo };
- }
- return null;
- }
-
- function render() {
- const container = document.getElementById("mainContent");
- const preBtn = document.getElementById("headerPreBtn");
- const logoutBtn = document.getElementById("headerLogoutBtn");
-
- if (currentUser) {
- logoutBtn.textContent = '🚪 Cerrar sesión';
- logoutBtn.classList.remove('hidden');
- if (mozoFinalOrder && mozoFinalOrder.length > 0) {
- preBtn.classList.remove('hidden');
- } else {
- preBtn.classList.add('hidden');
- }
- } else {
- logoutBtn.classList.add('hidden');
- preBtn.classList.add('hidden');
- }
-
- if (currentScreen === "auth") renderAuth(container);
- else if (currentScreen === "main") renderMainMenu(container);
- else if (currentScreen === "menuCarta") renderCarta(container);
- else if (currentScreen === "preCuenta") renderPreCuenta(container);
- else if (currentScreen === "confirmMozo") renderMozo(container);
- else if (currentScreen === "confirmCuenta") renderCuenta(container);
- }
-
- // ─── SIMULACIÓN MOZO ────────────────────────────────────────────
- function simularConfirmacionMozo() {
- mozoFinalOrder = confirmedOrder.map(item => {
- if (Math.random() < 0.3) {
- const diff = Math.floor(Math.random() * 3) - 1;
- const newCant = Math.max(0, item.cantidad + diff);
- return { ...item, cantidad: newCant, modificado: diff !== 0 };
- }
- return { ...item, modificado: false };
- }).filter(i => i.cantidad > 0);
- render();
- }
-
- // ─── HEADER EVENTS ──────────────────────────────────────────────
- document.getElementById("headerLogoutBtn")?.addEventListener("click", () => {
- currentOrder = []; confirmedOrder = []; mozoFinalOrder = null;
- orderConfirmed = false; currentScreen = "auth";
- if (currentUser) currentUser = null;
- render();
- });
- document.getElementById("headerPreBtn")?.addEventListener("click", () => {
- if (mozoFinalOrder) { currentScreen = "preCuenta"; render(); }
- });
-
- // ─── AUTH ───────────────────────────────────────────────────────
- function renderAuth(container) {
- container.innerHTML = `
- <div style="text-align:center; padding:24px 0 8px;">
- <div style="font-size:3.5rem;">🍽️</div>
- <h2 style="margin:8px 0 2px; font-family:'Playfair Display', serif; font-size:1.8rem; color:#3a2a1a;">QuickTable</h2>
- <p style="color:#8a7a6a; font-size:0.85rem;">Pide desde tu mesa</p>
- </div>
- <div class="option-grid" id="authButtons">
- <button id="loginBtn">🔐 Iniciar sesión</button>
- <button id="registerBtn" class="btn-outline">📝 Registrarse</button>
- <button id="guestBtn" class="btn-outline" style="border-color:#8a7a6a; color:#8a7a6a;">👤 Continuar como invitado</button>
- </div>
- <div id="loginForm" class="hidden" style="margin-top:12px;">
- <input type="text" id="loginId" placeholder="ID de usuario">
- <input type="password" id="loginPass" placeholder="Contraseña">
- <button id="doLoginBtn">Ingresar</button>
- <button id="cancelLoginBtn" class="btn-secondary">Cancelar</button>
- </div>
- <div id="registerForm" class="hidden" style="margin-top:12px;">
- <input type="text" id="regId" placeholder="ID de usuario">
- <input type="password" id="regPass" placeholder="Contraseña">
- <input type="text" id="regName" placeholder="Nombre">
- <input type="text" id="regLastName" placeholder="Apellido">
- <input type="email" id="regEmail" placeholder="Correo electrónico">
- <label style="font-size:0.8rem; color:#8a7a6a; margin-left:8px;">Fecha de nacimiento</label>
- <input type="date" id="regBirth" style="margin-bottom:12px;">
- <button id="doRegisterBtn">Crear cuenta</button>
- <button id="cancelRegisterBtn" class="btn-secondary">Cancelar</button>
- </div>
- `;
-
- document.getElementById("loginBtn")?.addEventListener("click", () => {
- document.getElementById("authButtons").classList.add("hidden");
- document.getElementById("loginForm").classList.remove("hidden");
- });
- document.getElementById("cancelLoginBtn")?.addEventListener("click", () => {
- document.getElementById("authButtons").classList.remove("hidden");
- document.getElementById("loginForm").classList.add("hidden");
- });
- document.getElementById("doLoginBtn")?.addEventListener("click", () => {
- const id = document.getElementById("loginId")?.value.trim();
- if (!id) { alert("Ingresa tu ID"); return; }
- currentUser = { id, nombre: id, email: id+"@mail.com", esPreferencial: true };
- currentOrder = []; confirmedOrder = []; mozoFinalOrder = null; orderConfirmed = false;
- currentScreen = "main"; render();
- });
- document.getElementById("registerBtn")?.addEventListener("click", () => {
- document.getElementById("authButtons").classList.add("hidden");
- document.getElementById("registerForm").classList.remove("hidden");
- });
- document.getElementById("cancelRegisterBtn")?.addEventListener("click", () => {
- document.getElementById("authButtons").classList.remove("hidden");
- document.getElementById("registerForm").classList.add("hidden");
- });
- document.getElementById("doRegisterBtn")?.addEventListener("click", () => {
- const id = document.getElementById("regId")?.value.trim();
- const pass = document.getElementById("regPass")?.value.trim();
- const name = document.getElementById("regName")?.value.trim();
- const lastName = document.getElementById("regLastName")?.value.trim();
- const email = document.getElementById("regEmail")?.value.trim();
- const birth = document.getElementById("regBirth")?.value;
- if (!id || !pass || !name || !lastName || !email || !birth) {
- alert("Completa todos los campos."); return;
- }
- currentUser = { id, nombre: name+" "+lastName, email, pass, birth, esPreferencial: false };
- currentOrder = []; confirmedOrder = []; mozoFinalOrder = null; orderConfirmed = false;
- currentScreen = "main"; render();
- });
- document.getElementById("guestBtn")?.addEventListener("click", () => {
- currentUser = null; currentOrder = []; confirmedOrder = []; mozoFinalOrder = null; orderConfirmed = false;
- currentScreen = "main"; render();
- });
- }
-
- // ─── MAIN MENU ──────────────────────────────────────────────────
- function renderMainMenu(container) {
- let greeting = '';
- if (currentUser) {
- greeting = `<div class="welcome-badge"><strong>✨ ¡Hola ${currentUser.nombre}!</strong><br><small>Tienes beneficios exclusivos por ser miembro. 🎁</small></div>`;
- } else {
- greeting = `<div class="alert">👋 Estás como invitado.</div>`;
- }
-
- let orderStatus = '';
- if (orderConfirmed) {
- orderStatus = `<div class="alert">✅ Pedido enviado al mozo. Espera reconfirmación.</div>`;
- if (mozoFinalOrder) {
- const diff = totalItems(mozoFinalOrder) !== totalItems(confirmedOrder);
- orderStatus = `<div class="alert" style="background:#fef6ed;color:#8a5a2a;">🛎️ Mozo reconfirmó tu pedido. ${diff ? 'Algunos items ajustados.' : ''} <a href="#" id="preLink" style="color:#c2410c;font-weight:600;">Ver pre-cuenta</a></div>`;
- }
- }
-
- let orderPreview = '';
- if (currentOrder.length > 0) {
- const qty = totalItems(currentOrder);
- const total = totalPrice(currentOrder).toFixed(2);
- orderPreview = `<div class="cart-summary">🛒 Pedido: ${qty} productos · S/ ${total}</div>`;
- } else {
- orderPreview = `<div class="cart-summary" style="color:#8a7a6a;">🛒 Tu pedido está vacío</div>`;
- }
-
- container.innerHTML = `
- ${greeting}
- <div class="option-grid">
- <button id="btnCarta">📖 Ver carta</button>
- <button id="btnMozo">🛎️ Llamar al mozo</button>
- <button id="btnCuenta">💰 Pedir cuenta</button>
- </div>
- ${orderStatus}
- ${orderPreview}
- ${!currentUser ? `<div style="margin-top:12px; padding:12px; border-radius:18px; background:linear-gradient(135deg, rgba(194,65,12,0.06), rgba(220,90,30,0.03)); text-align:center; border:1px solid #f5e3d5;">
- <p style="font-size:0.85rem; color:#5a4a3a;">📝 <strong>Regístrate</strong> y obtén <span style="color:#c2410c; font-weight:700;">promociones y descuentos</span> exclusivos</p>
- <button id="goToRegisterBtn" class="btn-outline" style="margin-top:8px; padding:10px; font-size:0.85rem;">Crear cuenta</button>
- </div>` : ''}
- `;
-
- document.getElementById("btnCarta")?.addEventListener("click", () => { currentScreen="menuCarta"; render(); });
- document.getElementById("btnMozo")?.addEventListener("click", () => { currentScreen="confirmMozo"; render(); });
- document.getElementById("btnCuenta")?.addEventListener("click", () => { currentScreen="confirmCuenta"; render(); });
- document.getElementById("goToRegisterBtn")?.addEventListener("click", () => { currentScreen="auth"; render(); });
- document.getElementById("preLink")?.addEventListener("click", (e) => { e.preventDefault(); currentScreen="preCuenta"; render(); });
- }
-
- // ─── CARTA ──────────────────────────────────────────────────────
- function renderCarta(container) {
- let itemsHtml = `<button id="backToMain" class="back-button">← Volver</button>`;
- itemsHtml += `<div class="section-title" style="margin-top:8px;">📋 Nuestra Carta</div>`;
-
- for (let cat of cartaData) {
- itemsHtml += `<div class="cat-header"><span class="cat-emoji">${cat.emoji}</span>${cat.tipo}</div>`;
- for (let item of cat.items) {
- const inOrder = currentOrder.find(o => o.id === item.id);
- const qty = inOrder ? inOrder.cantidad : 0;
- itemsHtml += `<div class="card-item">
- <div class="item-info">
- <h3>${item.nombre}</h3>
- <p>${item.descripcion}</p>
- <span class="price">S/ ${item.precio.toFixed(2)}</span>
- </div>
- <div class="qty-control">
- ${qty > 0 ? `<button class="qty-btn qty-btn-minus" data-id="${item.id}" data-action="minus">−</button>` : ''}
- ${qty > 0 ? `<span class="qty-value">${qty}</span>` : ''}
- <button class="qty-btn" data-id="${item.id}" data-action="plus">+</button>
- </div>
- </div>`;
- }
- }
-
- let sidebarHtml = `<div class="cart-summary"><div class="order-header"><strong>🧾 Mi pedido</strong>`;
- sidebarHtml += `<span class="badge">${totalItems(currentOrder)} items</span></div>`;
- if (currentOrder.length === 0) {
- sidebarHtml += `<div class="empty-state"><div>🛒</div><p>Agrega productos de la carta</p></div>`;
- } else {
- currentOrder.forEach(item => {
- sidebarHtml += `<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
- <span>${item.cantidad}x ${item.nombre}</span>
- <span style="font-weight:600;color:#c2410c;">S/ ${(item.precio * item.cantidad).toFixed(2)}</span>
- </div>`;
- });
- const total = totalPrice(currentOrder).toFixed(2);
- sidebarHtml += `<hr><div class="total-row"><strong>Total</strong><strong>S/ ${total}</strong></div>`;
- }
- sidebarHtml += `</div>`;
- sidebarHtml += `<button id="sendOrderBtn" class="btn-success">📤 Solicitar pedido</button>`;
- sidebarHtml += `<button id="clearOrderBtn" class="btn-secondary">🗑️ Vaciar pedido</button>`;
-
- container.innerHTML = `<div class="carta-layout">
- <div class="carta-items">${itemsHtml}</div>
- <div class="carta-sidebar">${sidebarHtml}</div>
- </div>`;
-
- document.querySelectorAll(".qty-btn").forEach(btn => {
- btn.addEventListener("click", () => {
- const id = parseInt(btn.dataset.id);
- const action = btn.dataset.action;
- const item = findItem(id);
- if (!item) return;
- const existing = currentOrder.find(o => o.id === id);
- if (action === "plus") {
- if (existing) existing.cantidad += 1;
- else currentOrder.push({ id, nombre: item.nombre, precio: item.precio, cantidad: 1, tipo: item.tipo });
- } else if (action === "minus" && existing) {
- existing.cantidad -= 1;
- if (existing.cantidad <= 0) {
- currentOrder = currentOrder.filter(o => o.id !== id);
- }
- }
- orderConfirmed = false;
- renderCarta(container);
- });
- });
- document.getElementById("backToMain")?.addEventListener("click", () => { currentScreen="main"; render(); });
- document.getElementById("clearOrderBtn")?.addEventListener("click", () => {
- if (confirm("¿Vaciar todo?")) { currentOrder = []; confirmedOrder = []; orderConfirmed = false; renderCarta(container); }
- });
- document.getElementById("sendOrderBtn")?.addEventListener("click", () => {
- if (currentOrder.length === 0) { alert("Agrega productos primero."); return; }
- confirmedOrder = currentOrder.map(i => ({ ...i }));
- orderConfirmed = true;
- setTimeout(() => simularConfirmacionMozo(), 5000 + Math.random() * 7000);
- alert("✅ Pedido enviado. El mozo pasará a reconfirmar.");
- currentScreen = "main"; render();
- });
- }
-
- // ─── PRE-CUENTA ────────────────────────────────────────────────
- function renderPreCuenta(container) {
- let html = `<button id="backMain" class="back-button">← Volver</button>`;
- html += `<div class="section-title" style="margin-top:8px;">📋 Pre-cuenta</div>`;
-
- if (!mozoFinalOrder || mozoFinalOrder.length === 0) {
- html += `<div class="empty-state"><div>🧾</div><p>No hay pedidos reconfirmados aún</p></div>`;
- container.innerHTML = html;
- document.getElementById("backMain")?.addEventListener("click", () => { currentScreen="main"; render(); });
- return;
- }
-
- html += `<p style="color:#8a7a6a; font-size:0.85rem; margin-bottom:16px;">Items reconfirmados por el mozo</p>`;
-
- // Lo que pediste
- html += `<div style="font-size:0.85rem; font-weight:600; color:#5a4a3a; margin-bottom:8px;">📝 Pediste:</div>`;
- confirmedOrder.forEach(item => {
- html += `<div class="card-item-pre"><div style="display:flex;justify-content:space-between;"><span>${item.cantidad}x ${item.nombre}</span><span style="color:#c2410c;font-weight:600;">S/ ${(item.precio * item.cantidad).toFixed(2)}</span></div></div>`;
- });
-
- html += `<hr>`;
-
- // Lo reconfirmado
- let anyModified = false;
- html += `<div style="font-size:0.85rem; font-weight:600; color:#5a4a3a; margin-bottom:8px;">✅ Reconﬁrmado por mozo:</div>`;
- mozoFinalOrder.forEach(item => {
- const cls = item.modificado ? "pre-item-modified" : "pre-item-confirmed";
- if (item.modificado) anyModified = true;
- html += `<div class="card-item-pre ${cls}"><div style="display:flex;justify-content:space-between;align-items:center;"><div><span>${item.cantidad}x ${item.nombre}</span>${item.modificado ? '<span style="font-size:0.7rem;color:#c2410c;font-weight:600;margin-left:8px;">(ajustado)</span>' : ''}</div><span style="color:#2b8c3e;font-weight:600;">S/ ${(item.precio * item.cantidad).toFixed(2)}</span></div></div>`;
- });
-
- const total = totalPrice(mozoFinalOrder).toFixed(2);
- html += `<div class="cart-summary" style="margin-top:16px;"><div class="total-row"><strong>Total final</strong><strong style="color:#c2410c;">S/ ${total}</strong></div></div>`;
- if (anyModified) {
- html += `<div class="alert" style="background:#fef6ed;color:#8a5a2a;">ℹ️ Algunas cantidades fueron ajustadas por el mozo según disponibilidad.</div>`;
- }
-
- container.innerHTML = html;
- document.getElementById("backMain")?.addEventListener("click", () => { currentScreen="main"; render(); });
- }
-
- // ─── MOZO ───────────────────────────────────────────────────────
- function renderMozo(container) {
- container.innerHTML = `
- <button id="backMain" class="back-button">← Volver</button>
- <div style="text-align:center; margin-top:40px;">
- <div style="font-size:4rem;">🛎️</div>
- <h2 style="margin:12px 0 4px;">Solicitud enviada</h2>
- <p style="color:#8a7a6a;">Un mozo se acercará a tu mesa en breve.</p>
- <div class="alert">✅ Notificación enviada al sistema</div>
- <button id="okMozoBtn" class="btn-outline">Entendido</button>
- </div>
- `;
- document.getElementById("backMain")?.addEventListener("click", () => { currentScreen="main"; render(); });
- document.getElementById("okMozoBtn")?.addEventListener("click", () => { currentScreen="main"; render(); });
- }
-
- // ─── CUENTA ─────────────────────────────────────────────────────
- function renderCuenta(container) {
- const items = mozoFinalOrder || currentOrder;
- const total = totalPrice(items).toFixed(2);
- let itemsHtml = "";
- if (items.length === 0) {
- itemsHtml = "<div class='empty-state'><div>🧾</div><p>No hay productos en tu cuenta</p></div>";
- } else {
- items.forEach(item => {
- itemsHtml += `<div class="card-item-pre"><div style="display:flex;justify-content:space-between;"><span>${item.cantidad}x ${item.nombre}</span><span style="font-weight:600;">S/ ${(item.precio * item.cantidad).toFixed(2)}</span></div></div>`;
- });
- }
- container.innerHTML = `
- <button id="backMain" class="back-button">← Volver</button>
- <div class="section-title" style="margin-top:8px;">💰 Cuenta</div>
- ${itemsHtml}
- <hr>
- <div class="cart-summary"><div class="total-row"><strong>Total a pagar</strong><strong style="color:#c2410c;font-size:1.2rem;">S/ ${total}</strong></div></div>
- <div class="alert" style="margin-top:16px;">💳 Puedes pagar con tarjeta, efectivo o QR</div>
- <button id="requestBillBtn">Solicitar cuenta final</button>
- <p style="font-size:0.75rem; margin-top:10px; color:#8a7a6a; text-align:center;">*Un mozo se acercará con el comprobante</p>
- `;
- document.getElementById("backMain")?.addEventListener("click", () => { currentScreen="main"; render(); });
- document.getElementById("requestBillBtn")?.addEventListener("click", () => {
- alert("✅ Cuenta solicitada. El mozo llevará el detalle a tu mesa.");
- });
- }
-
- // ─── INIT ───────────────────────────────────────────────────────
- render();
+const cartaData=[
+{tipo:"Aperitivos",emoji:"🥨",items:[{id:1,nombre:"Papas bravas",precio:4.90,descripcion:"Con salsa picante y alioli"},{id:2,nombre:"Ensalada César",precio:6.50,descripcion:"Pollo, parmesano, aderezo César"}]},
+{tipo:"Menú",emoji:"📋",items:[{id:3,nombre:"Hamburguesa Clásica",precio:9.90,descripcion:"Carne 180gr, queso, lechuga, tomate"}]},
+{tipo:"Platos fuertes",emoji:"🔥",items:[{id:4,nombre:"Lomo saltado",precio:12.90,descripcion:"Lomo, cebolla, tomate, papas, arroz"},{id:5,nombre:"Picanha a la parrilla",precio:15.90,descripcion:"Con guarnición y chimichurri"}]},
+{tipo:"Acompañamientos",emoji:"🥔",items:[{id:10,nombre:"Papas fritas",precio:3.50,descripcion:"Porción individual"},{id:11,nombre:"Arroz blanco",precio:2.50,descripcion:"Porción individual"}]},
+{tipo:"Bebidas",emoji:"🥤",items:[{id:8,nombre:"Gaseosa",precio:2.50,descripcion:"Personal 400ml"},{id:9,nombre:"Cerveza artesanal",precio:4.00,descripcion:"Rubia 500ml"}]},
+{tipo:"Postres",emoji:"🍰",items:[{id:6,nombre:"Tarta de queso",precio:4.50,descripcion:"Con coulis de frutos rojos"},{id:7,nombre:"Volcán de chocolate",precio:5.20,descripcion:"Con helado de vainilla"}]}
+];
+let currentUser=null,currentOrder=[],ordersSent=[],mozoFinalOrder=null,currentScreen="auth",inExtraOrder=false;
+function totalItems(a){return a.reduce((s,i)=>s+i.cantidad,0);}
+function totalPrice(a){return a.reduce((s,i)=>s+(i.precio*i.cantidad),0);}
+function findItem(id){for(let c of cartaData){let f=c.items.find(i=>i.id===id);if(f)return{...f,tipo:c.tipo};}return null;}
+function render(){
+const c=document.getElementById("mainContent"),pre=document.getElementById("headerPreBtn"),lo=document.getElementById("headerLogoutBtn"),has=ordersSent.length>0;
+if(currentUser){lo.textContent='🚪 Cerrar sesión';lo.classList.remove('hidden');pre.classList.toggle('hidden',!has);}else{lo.classList.add('hidden');pre.classList.add('hidden');}
+if(currentScreen==="auth")renderAuth(c);else if(currentScreen==="main")renderMainMenu(c);else if(currentScreen==="menuCarta")renderCarta(c);else if(currentScreen==="verPedido")renderVerPedido(c);else if(currentScreen==="preCuenta")renderPreCuenta(c);else if(currentScreen==="confirmMozo")renderMozo(c);else if(currentScreen==="confirmCuenta")renderCuenta(c);
+}
+document.getElementById("headerLogoutBtn")?.addEventListener("click",()=>{currentUser=null;currentOrder=[];ordersSent=[];mozoFinalOrder=null;inExtraOrder=false;currentScreen="auth";render();});
+document.getElementById("headerPreBtn")?.addEventListener("click",()=>{currentScreen="preCuenta";render();});
+function renderAuth(c){
+c.innerHTML=`<div style="text-align:center;padding:24px 0 8px;"><div style="font-size:3.5rem;">🍽️</div><h2 style="margin:8px 0 2px;font-family:'Playfair Display',serif;font-size:1.8rem;color:#3a2a1a;">QuickTable</h2><p style="color:#8a7a6a;font-size:0.85rem;">Pide desde tu mesa</p></div><div class="option-grid" id="authButtons"><button id="loginBtn">🔐 Iniciar sesión</button><button id="registerBtn" class="btn-outline">📝 Registrarse</button><button id="guestBtn" class="btn-outline" style="border-color:#8a7a6a;color:#8a7a6a;">👤 Continuar como invitado</button></div><div id="loginForm" class="hidden" style="margin-top:12px;"><input type="text" id="loginId" placeholder="ID de usuario"><input type="password" id="loginPass" placeholder="Contraseña"><button id="doLoginBtn">Ingresar</button><button id="cancelLoginBtn" class="btn-secondary">Cancelar</button></div><div id="registerForm" class="hidden" style="margin-top:12px;"><input type="text" id="regId" placeholder="ID de usuario"><input type="password" id="regPass" placeholder="Contraseña"><input type="text" id="regName" placeholder="Nombre"><input type="text" id="regLastName" placeholder="Apellido"><input type="email" id="regEmail" placeholder="Correo electrónico"><label style="font-size:0.8rem;color:#8a7a6a;margin-left:8px;">Fecha de nacimiento</label><input type="date" id="regBirth"><button id="doRegisterBtn">Crear cuenta</button><button id="cancelRegisterBtn" class="btn-secondary">Cancelar</button></div>`;
+const b=document.getElementById("authButtons"),lF=document.getElementById("loginForm"),rF=document.getElementById("registerForm");
+document.getElementById("loginBtn")?.addEventListener("click",()=>{b.classList.add("hidden");lF.classList.remove("hidden");});
+document.getElementById("cancelLoginBtn")?.addEventListener("click",()=>{b.classList.remove("hidden");lF.classList.add("hidden");});
+document.getElementById("doLoginBtn")?.addEventListener("click",()=>{const id=document.getElementById("loginId")?.value.trim();if(!id){alert("Ingresa tu ID");return;}currentUser={id,nombre:id,email:id+"@mail.com",esPreferencial:true};currentOrder=[];ordersSent=[];mozoFinalOrder=null;inExtraOrder=false;currentScreen="main";render();});
+document.getElementById("registerBtn")?.addEventListener("click",()=>{b.classList.add("hidden");rF.classList.remove("hidden");});
+document.getElementById("cancelRegisterBtn")?.addEventListener("click",()=>{b.classList.remove("hidden");rF.classList.add("hidden");});
+document.getElementById("doRegisterBtn")?.addEventListener("click",()=>{const id=document.getElementById("regId")?.value.trim();const pw=document.getElementById("regPass")?.value.trim();const nm=document.getElementById("regName")?.value.trim();const la=document.getElementById("regLastName")?.value.trim();const em=document.getElementById("regEmail")?.value.trim();const bi=document.getElementById("regBirth")?.value;if(!id||!pw||!nm||!la||!em||!bi){alert("Completa todos los campos.");return;}currentUser={id,nombre:nm+" "+la,email:em,pass:pw,birth:bi,esPreferencial:false};currentOrder=[];ordersSent=[];mozoFinalOrder=null;inExtraOrder=false;currentScreen="main";render();});
+document.getElementById("guestBtn")?.addEventListener("click",()=>{currentUser=null;currentOrder=[];ordersSent=[];mozoFinalOrder=null;inExtraOrder=false;currentScreen="main";render();});
+}
+function renderMainMenu(c){
+const has=ordersSent.length>0;
+const greeting=currentUser?`<div class="welcome-badge"><strong>✨ ¡Hola ${currentUser.nombre}!</strong><br><small>Tienes beneficios exclusivos por ser miembro. 🎁</small></div>`:`<div class="alert">👋 Estás como invitado.</div>`;
+let st='';
+if(ordersSent.length>0){st=`<div class="alert">✅ Pedido enviado al mozo.</div>`;if(mozoFinalOrder)st=`<div class="alert alert-warn">🛎️ Mozo reconfirmó. <a href="#" id="preLink" style="color:#c2410c;font-weight:600;">Ver pre-cuenta</a></div>`;}
+const ordPrev=currentOrder.length>0?`<div class="cart-summary">🛒 Pedido en curso: ${totalItems(currentOrder)} productos · S/ ${totalPrice(currentOrder).toFixed(2)} <button id="goVerPedidoBtn" class="btn-outline" style="margin-top:8px;padding:10px;font-size:0.85rem;">📋 Ver pedido</button></div>`:`<div class="cart-summary" style="color:#8a7a6a;">🛒 No tienes pedido en curso</div>`;
+c.innerHTML=`${greeting}<div class="option-grid"><button id="btnCarta">📖 Ir a la carta</button><button id="btnMozo">🛎️ Llamar al mozo</button><button id="btnCuenta">💰 Pedir cuenta</button></div>${st}${ordPrev}${!currentUser?`<div style="margin-top:12px;padding:12px;border-radius:18px;background:linear-gradient(135deg,rgba(194,65,12,0.06),rgba(220,90,30,0.03));text-align:center;border:1px solid #f5e3d5;"><p style="font-size:0.85rem;color:#5a4a3a;">📝 <strong>Regístrate</strong> y obtén <span style="color:#c2410c;font-weight:700;">promociones y descuentos</span> exclusivos</p><button id="goToRegisterBtn" class="btn-outline" style="margin-top:8px;padding:10px;font-size:0.85rem;">Crear cuenta</button></div>`:''}`;
+document.getElementById("btnCarta")?.addEventListener("click",()=>{inExtraOrder=has&&currentOrder.length>0;currentScreen="menuCarta";render();});
+document.getElementById("btnMozo")?.addEventListener("click",()=>{currentScreen="confirmMozo";render();});
+document.getElementById("btnCuenta")?.addEventListener("click",()=>{currentScreen="confirmCuenta";render();});
+document.getElementById("goVerPedidoBtn")?.addEventListener("click",()=>{currentScreen="verPedido";render();});
+document.getElementById("goToRegisterBtn")?.addEventListener("click",()=>{currentScreen="auth";render();});
+document.getElementById("preLink")?.addEventListener("click",(e)=>{e.preventDefault();currentScreen="preCuenta";render();});
+}
+function renderCarta(c){
+let ih=`<button id="backToMain" class="back-button">← Volver</button><div class="section-title" style="margin-top:8px;">📋 Nuestra Carta</div>`;
+if(inExtraOrder)ih+=`<div class="alert alert-warn" style="margin-bottom:12px;">➕ Estás agregando un <strong>pedido adicional</strong></div>`;
+for(let cat of cartaData){ih+=`<div class="cat-header"><span class="cat-emoji">${cat.emoji}</span>${cat.tipo}</div>`;for(let item of cat.items){const io=currentOrder.find(o=>o.id===item.id);const q=io?io.cantidad:0;ih+=`<div class="card-item"><div class="item-info"><h3>${item.nombre}</h3><p>${item.descripcion}</p><span class="price">S/ ${item.precio.toFixed(2)}</span></div><div class="qty-control">${q>0?`<button class="qty-btn qty-btn-minus" data-id="${item.id}" data-action="minus">−</button>`:''}${q>0?`<span class="qty-value">${q}</span>`:''}<button class="qty-btn" data-id="${item.id}" data-action="plus">+</button></div></div>`;}}
+let side=`<div class="cart-summary"><div class="order-header"><strong>🧾 Mi pedido</strong><span class="badge">${totalItems(currentOrder)} items</span></div>`;
+if(currentOrder.length===0)side+=`<div class="empty-state"><div>🛒</div><p>Agrega productos</p></div>`;else{currentOrder.forEach(i=>{side+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;"><span>${i.cantidad}x ${i.nombre}</span><span style="font-weight:600;color:#c2410c;">S/ ${(i.precio*i.cantidad).toFixed(2)}</span></div>`;});const t=totalPrice(currentOrder).toFixed(2);side+=`<hr><div class="total-row"><strong>Total</strong><strong>S/ ${t}</strong></div>`;}
+side+=`</div><button id="viewOrderBtnCarta">📋 Ver pedido (${totalItems(currentOrder)})</button><button id="keepBrowsingBtn" class="btn-outline">🍽️ Seguir pidiendo</button>`;
+c.innerHTML=`<div class="carta-layout"><div class="carta-items">${ih}</div><div class="carta-sidebar">${side}</div></div>`;
+document.querySelectorAll(".qty-btn").forEach(btn=>{btn.addEventListener("click",()=>{const id=parseInt(btn.dataset.id),action=btn.dataset.action,item=findItem(id);if(!item)return;const existing=currentOrder.find(o=>o.id===id);if(action==="plus"){if(existing)existing.cantidad+=1;else currentOrder.push({id,nombre:item.nombre,precio:item.precio,cantidad:1,tipo:item.tipo});}else if(action==="minus"&&existing){existing.cantidad-=1;if(existing.cantidad<=0)currentOrder=currentOrder.filter(o=>o.id!==id);}renderCarta(c);});});
+document.getElementById("backToMain")?.addEventListener("click",()=>{currentScreen="main";render();});
+document.getElementById("viewOrderBtnCarta")?.addEventListener("click",()=>{currentScreen="verPedido";render();});
+document.getElementById("keepBrowsingBtn")?.addEventListener("click",()=>{});
+}
+function renderVerPedido(c){
+let h=`<button id="backFromOrder" class="back-button">← Volver a carta</button><div class="section-title" style="margin-top:8px;">🧾 Mi pedido</div>`;
+if(ordersSent.length>0){ordersSent.forEach((o,i)=>{const tl=o.type==="base"?"Pedido principal":"Pedido adicional",tc=o.type==="base"?"pedido-tag-base":"pedido-tag-extra",cc=o.type==="base"?"pedido-card-base":"pedido-card-extra";h+=`<div class="pedido-card ${cc}" style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><strong style="font-size:0.85rem;">${tl}</strong><span class="pedido-tag ${tc}">${totalItems(o.items)} items</span></div>`;o.items.forEach(j=>{h+=`<div style="display:flex;justify-content:space-between;margin-top:4px;"><span style="font-size:0.85rem;">${j.cantidad}x ${j.nombre}</span><span style="color:#c2410c;font-weight:600;">S/ ${(j.precio*j.cantidad).toFixed(2)}</span></div>`;});const t=totalPrice(o.items).toFixed(2);h+=`<div style="display:flex;justify-content:space-between;margin-top:6px;padding-top:6px;border-top:1px solid #f0e2d5;"><strong>Subtotal</strong><strong>S/ ${t}</strong></div></div>`;});h+=`<hr>`;}
+if(currentOrder.length>0){const ie=inExtraOrder||ordersSent.length>0;h+=`<div style="font-size:0.85rem;font-weight:600;color:#5a4a3a;margin-bottom:8px;">${ie?'➕ Nuevos items':'📝 Tu pedido'}</div>`;currentOrder.forEach(i=>{h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span>${i.cantidad}x ${i.nombre}</span><span style="color:#c2410c;font-weight:600;">S/ ${(i.precio*i.cantidad).toFixed(2)}</span></div>`;});const t=totalPrice(currentOrder).toFixed(2);h+=`<hr><div class="total-row"><strong>Total</strong><strong>S/ ${t}</strong></div>`;}else h+=`<div class="empty-state"><div>🛒</div><p>No has agregado productos</p></div>`;
+if(currentOrder.length>0){const lb=inExtraOrder||ordersSent.length>0?'📤 Solicitar pedido adicional':'📤 Solicitar pedido';h+=`<button id="sendOrderBtn" class="btn-success" style="margin-top:16px;">${lb}</button>`;}
+h+=`<button id="keepOrderingBtn" class="btn-outline">🍽️ Seguir pidiendo</button>`+(currentOrder.length>0?`<button id="clearOrderBtn" class="btn-secondary">🗑️ Vaciar pedido en curso</button>`:'');
+c.innerHTML=h;
+document.getElementById("backFromOrder")?.addEventListener("click",()=>{currentScreen="menuCarta";render();});
+document.getElementById("sendOrderBtn")?.addEventListener("click",()=>{if(currentOrder.length===0)return;const type=ordersSent.length===0?"base":"extra";ordersSent.push({items:currentOrder.map(i=>({...i})),type});currentOrder=[];inExtraOrder=false;if(type==="base")setTimeout(()=>simularConfirmacionMozo(),5000+Math.random()*7000);alert(`✅ ${type==='base'?'Pedido':'Pedido adicional'} enviado.`);currentScreen="main";render();});
+document.getElementById("keepOrderingBtn")?.addEventListener("click",()=>{currentScreen="menuCarta";render();});
+document.getElementById("clearOrderBtn")?.addEventListener("click",()=>{if(confirm("¿Vaciar?")){currentOrder=[];renderVerPedido(c);}});
+}
+function simularConfirmacionMozo(){const base=ordersSent.find(o=>o.type==="base");if(!base)return;mozoFinalOrder=base.items.map(i=>{if(Math.random()<0.3){const d=Math.floor(Math.random()*3)-1,nc=Math.max(0,i.cantidad+d);return{...i,cantidad:nc,modificado:d!==0};}return{...i,modificado:false};}).filter(i=>i.cantidad>0);render();}
+function renderPreCuenta(c){
+let h=`<button id="backMain" class="back-button">← Volver</button><div class="section-title" style="margin-top:8px;">📋 Pre-cuenta</div>`;
+if(!mozoFinalOrder||mozoFinalOrder.length===0){h+=`<div class="empty-state"><div>🧾</div><p>No hay pedidos reconfirmados aún</p></div>`;c.innerHTML=h;document.getElementById("backMain")?.addEventListener("click",()=>{currentScreen="main";render();});return;}
+h+=`<p style="color:#8a7a6a;font-size:0.85rem;margin-bottom:16px;">Items reconfirmados por el mozo</p>`;
+ordersSent.forEach((o,i)=>{h+=`<div style="font-size:0.85rem;font-weight:600;color:#5a4a3a;margin-bottom:6px;margin-top:${i>0?'12px':'0'};">📝 ${o.type==='base'?'Pedido principal':'Pedido adicional'}:</div>`;o.items.forEach(j=>{h+=`<div class="card-item-pre"><div style="display:flex;justify-content:space-between;"><span>${j.cantidad}x ${j.nombre}</span><span style="color:#c2410c;font-weight:600;">S/ ${(j.precio*j.cantidad).toFixed(2)}</span></div></div>`;});});
+h+=`<hr><div style="font-size:0.85rem;font-weight:600;color:#5a4a3a;margin-bottom:8px;">✅ Reconﬁrmado por mozo:</div>`;
+let any=false;mozoFinalOrder.forEach(i=>{const cls=i.modificado?"pre-item-modified":"pre-item-confirmed";if(i.modificado)any=true;h+=`<div class="card-item-pre ${cls}"><div style="display:flex;justify-content:space-between;align-items:center;"><div><span>${i.cantidad}x ${i.nombre}</span>${i.modificado?'<span style="font-size:0.7rem;color:#c2410c;font-weight:600;margin-left:8px;">(ajustado)</span>':''}</div><span style="color:#2b8c3e;font-weight:600;">S/ ${(i.precio*i.cantidad).toFixed(2)}</span></div></div>`;});
+const tot=totalPrice(mozoFinalOrder).toFixed(2);h+=`<div class="cart-summary" style="margin-top:16px;"><div class="total-row"><strong>Total final</strong><strong style="color:#c2410c;">S/ ${tot}</strong></div></div>`;if(any)h+=`<div class="alert alert-warn">ℹ️ Algunas cantidades fueron ajustadas.</div>`;
+c.innerHTML=h;document.getElementById("backMain")?.addEventListener("click",()=>{currentScreen="main";render();});
+}
+function renderMozo(c){c.innerHTML=`<button id="backMain" class="back-button">← Volver</button><div style="text-align:center;margin-top:40px;"><div style="font-size:4rem;">🛎️</div><h2 style="margin:12px 0 4px;">Solicitud enviada</h2><p style="color:#8a7a6a;">Un mozo se acercará a tu mesa.</p><div class="alert">✅ Notificación enviada</div><button id="okMozoBtn" class="btn-outline">Entendido</button></div>`;document.getElementById("backMain")?.addEventListener("click",()=>{currentScreen="main";render();});document.getElementById("okMozoBtn")?.addEventListener("click",()=>{currentScreen="main";render();});}
+function renderCuenta(c){
+const items=mozoFinalOrder||currentOrder;
+const tot=totalPrice(items).toFixed(2);
+let ihtml="";
+if(items.length===0)ihtml="<div class='empty-state'><div>🧾</div><p>No hay productos</p></div>";else items.forEach(i=>{ihtml+=`<div class="card-item-pre"><div style="display:flex;justify-content:space-between;"><span>${i.cantidad}x ${i.nombre}</span><span style="font-weight:600;">S/ ${(i.precio*i.cantidad).toFixed(2)}</span></div></div>`;});
+c.innerHTML=`<button id="backMain" class="back-button">← Volver</button><div class="section-title" style="margin-top:8px;">💰 Cuenta</div>${ihtml}<hr><div class="cart-summary"><div class="total-row"><strong>Total a pagar</strong><strong style="color:#c2410c;font-size:1.2rem;">S/ ${tot}</strong></div></div><div class="alert" style="margin-top:16px;">💳 Puedes pagar con tarjeta, efectivo o QR</div><button id="requestBillBtn">Solicitar cuenta final</button><p style="font-size:0.75rem;margin-top:10px;color:#8a7a6a;text-align:center;">*Un mozo se acercará con el comprobante</p>`;
+document.getElementById("backMain")?.addEventListener("click",()=>{currentScreen="main";render();});
+document.getElementById("requestBillBtn")?.addEventListener("click",()=>{alert("✅ Cuenta solicitada.");});
+}
+render();
 </script>
 </body>
 </html>
