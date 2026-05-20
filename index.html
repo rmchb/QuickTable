@@ -378,6 +378,40 @@
  .cat-emoji {
  margin-right: 6px;
  }
+
+ /* Layout carta: dos columnas en pantallas grandes */
+ .carta-layout {
+ display: flex;
+ flex-direction: column;
+ gap: 16px;
+ }
+
+ .carta-items {
+ flex: 1;
+ min-width: 0;
+ }
+
+ .carta-sidebar {
+ flex-shrink: 0;
+ }
+
+ @media (min-width: 600px) {
+ .carta-layout {
+ flex-direction: row;
+ align-items: flex-start;
+ }
+ .carta-items {
+ flex: 1;
+ }
+ .carta-sidebar {
+ width: 240px;
+ position: sticky;
+ top: 0;
+ }
+ .carta-sidebar .cart-summary {
+ margin-top: 0;
+ }
+ }
  </style>
 </head>
 <body>
@@ -642,15 +676,15 @@
 
  // ─── CARTA ──────────────────────────────────────────────────────
  function renderCarta(container) {
- let html = `<button id="backToMain" class="back-button">← Volver</button>`;
- html += `<div class="section-title" style="margin-top:8px;">📋 Nuestra Carta</div>`;
+ let itemsHtml = `<button id="backToMain" class="back-button">← Volver</button>`;
+ itemsHtml += `<div class="section-title" style="margin-top:8px;">📋 Nuestra Carta</div>`;
 
  for (let cat of cartaData) {
- html += `<div class="cat-header"><span class="cat-emoji">${cat.emoji}</span>${cat.tipo}</div>`;
+ itemsHtml += `<div class="cat-header"><span class="cat-emoji">${cat.emoji}</span>${cat.tipo}</div>`;
  for (let item of cat.items) {
  const inOrder = currentOrder.find(o => o.id === item.id);
  const qty = inOrder ? inOrder.cantidad : 0;
- html += `<div class="card-item">
+ itemsHtml += `<div class="card-item">
  <div class="item-info">
  <h3>${item.nombre}</h3>
  <p>${item.descripcion}</p>
@@ -665,27 +699,28 @@
  }
  }
 
- let summary = `<div class="cart-summary"><div class="order-header"><strong>🧾 Mi pedido</strong>`;
- summary += `<span class="badge">${totalItems(currentOrder)} items</span></div>`;
+ let sidebarHtml = `<div class="cart-summary"><div class="order-header"><strong>🧾 Mi pedido</strong>`;
+ sidebarHtml += `<span class="badge">${totalItems(currentOrder)} items</span></div>`;
  if (currentOrder.length === 0) {
- summary += `<div class="empty-state"><div>🛒</div><p>Agrega productos de la carta</p></div>`;
+ sidebarHtml += `<div class="empty-state"><div>🛒</div><p>Agrega productos de la carta</p></div>`;
  } else {
  currentOrder.forEach(item => {
- summary += `<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+ sidebarHtml += `<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
  <span>${item.cantidad}x ${item.nombre}</span>
  <span style="font-weight:600;color:#c2410c;">S/ ${(item.precio * item.cantidad).toFixed(2)}</span>
  </div>`;
  });
  const total = totalPrice(currentOrder).toFixed(2);
- summary += `<hr><div class="total-row"><strong>Total</strong><strong>S/ ${total}</strong></div>`;
+ sidebarHtml += `<hr><div class="total-row"><strong>Total</strong><strong>S/ ${total}</strong></div>`;
  }
- summary += `</div>`;
+ sidebarHtml += `</div>`;
+ sidebarHtml += `<button id="sendOrderBtn" class="btn-success">📤 Solicitar pedido</button>`;
+ sidebarHtml += `<button id="clearOrderBtn" class="btn-secondary">🗑️ Vaciar pedido</button>`;
 
- html += summary;
- html += `<button id="sendOrderBtn" class="btn-success">📤 Solicitar pedido</button>`;
- html += `<button id="clearOrderBtn" class="btn-secondary">🗑️ Vaciar pedido</button>`;
-
- container.innerHTML = html;
+ container.innerHTML = `<div class="carta-layout">
+ <div class="carta-items">${itemsHtml}</div>
+ <div class="carta-sidebar">${sidebarHtml}</div>
+ </div>`;
 
  document.querySelectorAll(".qty-btn").forEach(btn => {
  btn.addEventListener("click", () => {
