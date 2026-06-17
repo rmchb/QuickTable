@@ -29,23 +29,25 @@ Plataforma web progresiva (PWA) responsive que funciona desde el navegador en cu
 
 ## Costos
 
+> Precios validados para Perú (junio 2026). TC referencial: 1 USD = S/ 3.75.
+
 | Concepto | Costo único (S/) | Costo mensual (S/) |
 |---|---|---|
-| Desarrollo backend (FastAPI + PostgreSQL + WebSockets) | 8,000 – 12,000 | — |
-| Frontend web (React/Svelte + PWA responsive) | 5,000 – 8,000 | — |
-| Facturación Sunat (integración Nubefact/Facturador.com) | 2,000 – 3,500 | — |
-| Pasarela de pagos (Mercado Pago + Culqi) | 1,500 – 2,500 | — |
-| Multi-sede + jerarquía + roles + permisos | 2,000 – 3,500 | — |
-| IA Chat (OpenAI GPT-4o-mini para 50 clientes, ~500 msgs/cliente/mes) | — | 1,200 – 1,800 |
-| VPS (8GB RAM, 4 vCPU) | — | 150 – 250 |
-| Dominio .pe + SSL (1 año) | 120 | 10 |
-| Logo + identidad visual | 500 | — |
-| Landing page + documentación | 1,000 – 2,000 | — |
-| Soporte técnico (dev freelance part-time) | — | 800 – 1,200 |
-| Marketing inicial (Facebook + Google Ads) | 1,000 | 500 – 1,000 |
-| **TOTALES** | **S/ 21,120 – 33,120** | **S/ 2,660 – 4,260** |
+| Desarrollo backend (FastAPI + PostgreSQL + WebSockets) — freelance Perú ~2 meses | 5,000 – 8,000 | — |
+| Frontend web (React/Svelte + PWA responsive) — freelance Perú ~1.5 meses | 3,000 – 5,000 | — |
+| Facturación Sunat (integración Nubefact API, S/ 69-129/mes + 1 semana dev) | 1,000 – 2,000 | 70 – 130 |
+| Pasarela de pagos (Mercado Pago + Culqi, integración estándar) | 800 – 1,500 | — |
+| Multi-sede + jerarquía + roles + permisos | 1,000 – 2,000 | — |
+| IA Chat (OpenAI GPT-4o-mini: $0.15/1M input, $0.60/1M output — 50 clientes, ~500 msgs c/u = ~S/ 50-150/mes) | — | 50 – 150 |
+| VPS DigitalOcean ($24-48/mo: 4GB-8GB RAM, 2-4 vCPU) | — | 90 – 180 |
+| Dominio .pe (NIC.pe: ~S/ 35-40/año) + Let's Encrypt SSL gratis | 40 | 3 |
+| Logo + identidad visual (freelance Perú) | 300 – 500 | — |
+| Landing page + documentación (plantilla + ajustes) | 500 – 1,000 | — |
+| Soporte técnico (dev freelance part-time, ~10h/sem) | — | 500 – 800 |
+| Marketing inicial (Facebook + Google Ads para Lima) | 500 | 300 – 600 |
+| **TOTALES** | **S/ 12,140 – 20,000** | **S/ 1,013 – 1,863** |
 
-### Costos operativos promedio mensual estimado: **S/ 3,500/mes**
+### Costos operativos promedio mensual estimado: **S/ 1,500/mes**
 
 ## Capacidad
 
@@ -73,17 +75,16 @@ Plataforma web progresiva (PWA) responsive que funciona desde el navegador en cu
 
 | Clientes | Ingreso mensual | Ganancia/pérdida |
 |---|---|---|
-| 10 | S/ 750 | – S/ 2,750 |
-| 20 | S/ 1,500 | – S/ 2,000 |
-| 30 | S/ 2,250 | – S/ 1,250 |
-| **40** | **S/ 3,000** | **– S/ 500** |
-| **47** | **S/ 3,525** | **≈ S/ 0 (Break-even)** |
-| 50 | S/ 4,375 | + S/ 875 |
-| 60 | S/ 4,500 | + S/ 1,000 |
-| 80 | S/ 6,000 | + S/ 2,500 |
+| 10 | S/ 750 | – S/ 750 |
+| **20** | **S/ 1,500** | **≈ S/ 0 (Break-even)** |
+| 30 | S/ 2,250 | + S/ 750 |
+| 40 | S/ 3,000 | + S/ 1,500 |
+| 50 | S/ 3,750 | + S/ 2,250 |
+| 60 | S/ 4,500 | + S/ 3,000 |
+| 80 | S/ 6,000 | + S/ 4,500 |
 
-**Break-even:** ~47 clientes (o ~36 en plan Pro)
-**Recuperación de inversión inicial (S/ 27k):** ~18 meses con 60 clientes
+**Break-even:** ~20 clientes (o ~15 en plan Pro)
+**Recuperación de inversión inicial (S/ 16k):** ~7 meses con 30 clientes
 
 ### Tiempo de desarrollo: 6 – 10 semanas
 
@@ -116,26 +117,26 @@ Plataforma completa con app nativa iOS/Android (Flutter/React Native), infraestr
 
 | Concepto | Costo único (S/) | Costo mensual (S/) |
 |---|---|---|
-| Backend escalable (FastAPI + Redis + Workers + CDN) | 15,000 – 22,000 | — |
-| Frontend web (Next.js + SSR + PWA avanzada) | 8,000 – 14,000 | — |
-| App mobile nativa (Flutter/React Native, iOS + Android) | 16,000 – 28,000 | — |
-| Facturación Sunat (integración directa OSE + backup) | 3,000 – 4,500 | — |
-| Pasarela de pagos (Mercado Pago + Culqi + Yape multilink) | 2,500 – 4,000 | — |
-| Multi-sede + jerarquía + roles + permisos (full) | 2,500 – 4,000 | — |
-| IA Chat (GPT-4o-mini fine-tuned) | — | 1,500 – 2,500 |
-| Infraestructura cloud (AWS/GCP escalable) | — | 600 – 1,200 |
-| Base de datos gerenciada (RDS/Cloud SQL + backups) | — | 300 – 600 |
-| CDN + Storage (CloudFront + S3) | — | 100 – 200 |
-| Seguridad (WAF, pentesting, OWASP audit, rate limiting) | 4,000 – 8,000 | 200 – 400 |
-| Dominio .pe + SSL + emails corporativos | 200 | 40 |
-| UX/UI premium (diseño profesional) | 2,000 – 4,000 | — |
-| Landing page profesional + SEO + blog + demo | 2,000 – 4,000 | — |
-| Dashboard avanzado (reportes exportables) | 1,500 – 3,000 | — |
-| Soporte técnico (1 persona full-time L1/L2) | — | 2,000 – 3,000 |
-| Marketing (Ads + Google Play + ASO + TikTok) | 3,000 | 2,000 – 4,000 |
-| **TOTALES** | **S/ 59,700 – 97,700** | **S/ 6,700 – 11,900** |
+| Backend escalable (FastAPI + Redis + Workers + CDN) — freelance Perú ~3 meses | 8,000 – 12,000 | — |
+| Frontend web (Next.js + SSR + PWA avanzada) — freelance Perú ~2 meses | 5,000 – 8,000 | — |
+| App mobile nativa (Flutter/React Native, iOS + Android) — freelance Perú ~3 meses | 10,000 – 18,000 | — |
+| Facturación Sunat (integración directa OSE + Nubefact backup) | 1,500 – 3,000 | 70 – 130 |
+| Pasarela de pagos (Mercado Pago + Culqi + Yape) | 1,500 – 2,500 | — |
+| Multi-sede + jerarquía + roles + permisos (full) | 1,500 – 3,000 | — |
+| IA Chat (GPT-4o-mini fine-tuned, ~200 clientes) | — | 200 – 500 |
+| Infraestructura cloud (AWS/GCP escalable) | — | 400 – 800 |
+| Base de datos gerenciada (RDS/Cloud SQL) | — | 200 – 400 |
+| CDN + Storage (CloudFront + S3) | — | 50 – 100 |
+| Seguridad (WAF, pentesting, OWASP audit) | 3,000 – 5,000 | 100 – 200 |
+| Dominio .pe + SSL + emails corporativos | 80 | 20 |
+| UX/UI premium (diseño freelance Perú) | 1,500 – 3,000 | — |
+| Landing page profesional + SEO + blog | 1,500 – 3,000 | — |
+| Dashboard avanzado (reportes exportables) | 1,000 – 2,000 | — |
+| Soporte técnico (1 persona part-time L1/L2) | — | 1,500 – 2,000 |
+| Marketing (Ads + Google Play + TikTok) | 2,000 | 1,500 – 3,000 |
+| **TOTALES** | **S/ 36,080 – 59,500** | **S/ 4,020 – 7,150** |
 
-### Costos operativos promedio mensual estimado: **S/ 9,300/mes**
+### Costos operativos promedio mensual estimado: **S/ 5,500/mes**
 
 ## Capacidad
 
@@ -163,16 +164,16 @@ Plataforma completa con app nativa iOS/Android (Flutter/React Native), infraestr
 
 | Clientes | Ingreso mensual | Ganancia/pérdida |
 |---|---|---|
-| 20 | S/ 1,500 | – S/ 7,800 |
-| 50 | S/ 3,750 | – S/ 5,550 |
-| 80 | S/ 6,000 | – S/ 3,300 |
-| **124** | **S/ 9,300** | **≈ S/ 0 (Break-even)** |
-| 150 | S/ 11,250 | + S/ 1,950 |
-| 200 | S/ 15,000 | + S/ 5,700 |
-| 500 | S/ 37,500 | + S/ 28,200 |
+| 20 | S/ 1,500 | – S/ 4,000 |
+| 50 | S/ 3,750 | – S/ 1,750 |
+| **74** | **S/ 5,550** | **≈ S/ 0 (Break-even)** |
+| 100 | S/ 7,500 | + S/ 2,000 |
+| 150 | S/ 11,250 | + S/ 5,750 |
+| 200 | S/ 15,000 | + S/ 9,500 |
+| 500 | S/ 37,500 | + S/ 32,000 |
 
-**Break-even:** ~124 clientes (o ~94 en plan Pro)
-**Recuperación de inversión inicial (S/ 78k):** ~16 meses con 200 clientes
+**Break-even:** ~74 clientes (o ~56 en plan Pro)
+**Recuperación de inversión inicial (S/ 48k):** ~12 meses con 100 clientes
 
 ### Tiempo de desarrollo: 4 – 6 meses
 
@@ -194,13 +195,13 @@ Plataforma completa con app nativa iOS/Android (Flutter/React Native), infraestr
 | **Soporte** | Dev part-time | 1 persona full-time + SLA |
 | **Dashboard** | Estándar | Avanzado con reportes exportables |
 | **UX/UI** | Plantilla funcional | Diseño premium |
-| **Inversión inicial** | **S/ 21k – 33k** | **S/ 60k – 98k** |
-| **Costo operativo mensual** | **S/ 2.7k – 4.3k** | **S/ 6.7k – 11.9k** |
-| **Costo promedio mensual** | **~ S/ 3,500** | **~ S/ 9,300** |
+| **Inversión inicial** | **S/ 12k – 20k** | **S/ 36k – 60k** |
+| **Costo operativo mensual** | **S/ 1k – 1.9k** | **S/ 4k – 7.2k** |
+| **Costo promedio mensual** | **~ S/ 1,500** | **~ S/ 5,500** |
 | **Capacidad máxima** | **50 – 80 restaurantes** | **500+ restaurantes** |
-| **Break-even (a S/ 75 prom.)** | **~47 clientes** | **~124 clientes** |
-| **Break-even (solo plan Pro S/ 99)** | **~36 clientes** | **~94 clientes** |
-| **Recuperación inversión** | ~18 meses (60 clientes) | ~16 meses (200 clientes) |
+| **Break-even (a S/ 75 prom.)** | **~20 clientes** | **~74 clientes** |
+| **Break-even (solo plan Pro S/ 99)** | **~15 clientes** | **~56 clientes** |
+| **Recuperación inversión** | ~7 meses (30 clientes) | ~12 meses (100 clientes) |
 | **Tiempo desarrollo** | **6 – 10 semanas** | **4 – 6 meses** |
 
 ---
@@ -208,22 +209,22 @@ Plataforma completa con app nativa iOS/Android (Flutter/React Native), infraestr
 # ESTRATEGIA RECOMENDADA
 
 ## Fase 1 — Básico (Mes 1–3)
-- Invertir S/ 27k en desarrollo del MVP completo
+- Invertir S/ 16k en desarrollo del MVP completo
 - 10 clientes beta gratis para validación
-- Costo mensual: S/ 3,500
+- Costo mensual: S/ 1,500
 - Objetivo: 15 – 20 clientes pagos
 
 ## Fase 2 — Crecimiento (Mes 4–8)
 - Escalar a 40 – 50 clientes con marketing
-- Al llegar a 50–60 clientes, evaluar si la app nativa es necesaria
-- Ingreso mensual: S/ 3,000 – 4,500
-- **Break-even alcanzado (~47 clientes)**
+- Costo mensual sube a ~S/ 2,000
+- Ingreso mensual: S/ 2,250 – 3,750
+- **Break-even alcanzado (~20 clientes en mes 4-5)**
 
 ## Fase 3 — Salto a Completo (Mes 9–12)
-- Con el flujo de caja de los 50+ clientes (~S/ 4,500+/mes)
-- Financiar el desarrollo mobile y migración a cloud
-- Inversión adicional: S/ 40k – 70k
-- Objetivo: 150+ clientes en 12 meses
+- Con el flujo de caja estable (~S/ 2,500+/mes con 40+ clientes)
+- Evaluar si los clientes piden app nativa o la PWA es suficiente
+- Inversión adicional para mobile + cloud: S/ 25k – 40k
+- Objetivo: 100+ clientes en 12 meses
 
 ---
 
@@ -270,12 +271,14 @@ Plataforma completa con app nativa iOS/Android (Flutter/React Native), infraestr
 
 | Rubro | Mes 1-3 | Mes 4-8 | Mes 9-12 | Total 12 meses |
 |---|---|---|---|---|
-| Vendedores | S/ 7,500 | S/ 20,000 | S/ 25,000 | S/ 52,500 |
-| Facebook/Instagram Ads | S/ 1,500 | S/ 7,500 | S/ 9,000 | S/ 18,000 |
-| Google Ads | S/ 1,500 | S/ 7,500 | S/ 9,000 | S/ 18,000 |
-| Aliados estratégicos | S/ 600 | S/ 2,000 | S/ 2,000 | S/ 4,600 |
-| TikTok (producción básica) | S/ 500 | S/ 1,500 | S/ 1,500 | S/ 3,500 |
-| **Total distribución** | **S/ 11,600** | **S/ 38,500** | **S/ 46,500** | **S/ 96,600** |
+| Vendedor part-time (comisiones) | S/ 3,000 | S/ 9,000 | S/ 15,000 | S/ 27,000 |
+| Facebook/Instagram Ads | S/ 600 | S/ 3,000 | S/ 4,500 | S/ 8,100 |
+| Google Ads | S/ 600 | S/ 3,000 | S/ 4,500 | S/ 8,100 |
+| Aliados estratégicos | S/ 300 | S/ 1,000 | S/ 1,500 | S/ 2,800 |
+| TikTok (producción básica) | S/ 300 | S/ 1,000 | S/ 1,500 | S/ 2,800 |
+| **Total distribución** | **S/ 4,800** | **S/ 17,000** | **S/ 27,000** | **S/ 48,800** |
+
+> Nota: Estos costos están incluidos en los rubros de marketing y soporte de los costos generales.
 
 > Nota: Estos costos de distribución están **incluidos** en los rubros de marketing y soporte de los costos generales.
 
@@ -283,84 +286,75 @@ Plataforma completa con app nativa iOS/Android (Flutter/React Native), infraestr
 
 # TIEMPO DE RECUPERACIÓN DE INVERSIÓN (ROI)
 
-## Escenario Básico (Inversión: S/ 27,000 | Costo mensual: S/ 3,500)
+## Escenario Básico (Inversión: S/ 16,000 | Costo mensual: S/ 1,500)
 
-| Mes | Clientes acumulados | Ingreso mensual (S/) | Costo mensual (S/) | Flujo del mes | Flujo acumulado | Inversión restante |
-|---|---|---|---|---|---|---|
-| 1 | 0 (desarrollo) | 0 | 3,500 | –3,500 | –30,500 | 30,500 |
-| 2 | 0 (desarrollo) | 0 | 3,500 | –3,500 | –34,000 | 34,000 |
-| 3 | 10 (beta gratis) | 0 | 3,500 | –3,500 | –37,500 | 37,500 |
-| 4 | 15 (pagos) | 1,125 | 3,500 | –2,375 | –39,875 | 39,875 |
-| 5 | 22 | 1,650 | 3,500 | –1,850 | –41,725 | 41,725 |
-| 6 | 30 | 2,250 | 3,500 | –1,250 | –42,975 | 42,975 |
-| 7 | 38 | 2,850 | 3,500 | –650 | –43,625 | 43,625 |
-| 8 | 47 | 3,525 | 3,500 | +25 | –43,600 | 43,600 |
-| 9 | 55 | 4,125 | 3,500 | +625 | –42,975 | 42,975 |
-| 10 | 62 | 4,650 | 3,500 | +1,150 | –41,825 | 41,825 |
-| 11 | 70 | 5,250 | 3,500 | +1,750 | –40,075 | 40,075 |
-| 12 | 80 | 6,000 | 3,500 | +2,500 | –37,575 | 37,575 |
-| 13 | 85 | 6,375 | 3,700 | +2,675 | –34,900 | 34,900 |
-| 14 | 90 | 6,750 | 3,700 | +3,050 | –31,850 | 31,850 |
-| 15 | 95 | 7,125 | 3,700 | +3,425 | –28,425 | 28,425 |
-| 16 | 100 | 7,500 | 3,700 | +3,800 | –24,625 | 24,625 |
-| 17 | 105 | 7,875 | 3,700 | +4,175 | –20,450 | 20,450 |
-| 18 | 110 | 8,250 | 3,700 | +4,550 | –15,900 | 15,900 |
-| 19 | 115 | 8,625 | 3,700 | +4,925 | –10,975 | 10,975 |
-| 20 | 120 | 9,000 | 3,700 | +5,300 | –5,675 | 5,675 |
-| **21** | **125** | **9,375** | **3,700** | **+5,675** | **≈ 0** | **✅ Recuperado** |
-| 22 | 130 | 9,750 | 3,800 | +5,950 | +5,950 | Ganancia |
+| Mes | Clientes acum. | Ingreso (S/) | Costo (S/) | Flujo del mes | Deuda acumulada |
+|---|---|---|---|---|---|
+| 1 | 0 (desarrollo) | 0 | 1,500 | –1,500 | –17,500 |
+| 2 | 0 (desarrollo) | 0 | 1,500 | –1,500 | –19,000 |
+| 3 | 10 (beta) | 0 | 1,500 | –1,500 | –20,500 |
+| 4 | 15 | 1,125 | 1,500 | –375 | –20,875 |
+| 5 | 20 | 1,500 | 1,500 | 0 | –20,875 |
+| 6 | 25 | 1,875 | 1,500 | +375 | –20,500 |
+| 7 | 30 | 2,250 | 1,500 | +750 | –19,750 |
+| 8 | 35 | 2,625 | 1,500 | +1,125 | –18,625 |
+| 9 | 40 | 3,000 | 1,500 | +1,500 | –17,125 |
+| 10 | 45 | 3,375 | 1,800 | +1,575 | –15,550 |
+| 11 | 50 | 3,750 | 1,800 | +1,950 | –13,600 |
+| 12 | 55 | 4,125 | 1,800 | +2,325 | –11,275 |
+| 13 | 60 | 4,500 | 1,800 | +2,700 | –8,575 |
+| 14 | 65 | 4,875 | 1,800 | +3,075 | –5,500 |
+| **15** | **70** | **5,250** | **1,800** | **+3,450** | **–2,050** |
+| **16** | **75** | **5,625** | **1,800** | **+3,825** | **≈ +1,775 ✅** |
 
-**📊 Recuperación de inversión (Escenario Básico): 21 meses (1 año 9 meses)**
+**📊 Recuperación de inversión (Escenario Básico): ~16 meses (1 año 4 meses)**
 
-> *Asumiendo: precio promedio S/ 75/cliente, crecimiento de 5-10 clientes nuevos/mes, costo mensual sube ligeramente con más clientes.*
+> Asumiendo: precio promedio S/ 75/cliente, crecimiento de 5 clientes nuevos/mes.
 
 ### Escenario Básico — Sensibilidad por precio
 
-| Precio promedio | Clientes necesarios | Tiempo recuperación |
+| Precio promedio | Clientes p/ break-even | Tiempo recuperación |
 |---|---|---|
-| S/ 49 (solo plan básico) | 72 | ~36 meses |
-| **S/ 75 (mix de planes)** | **47** | **~21 meses** |
-| S/ 99 (todos en plan Pro) | 36 | ~16 meses |
-| S/ 129 (Pro + addons) | 28 | ~13 meses |
+| S/ 49 (solo básico) | 31 | ~24 meses |
+| **S/ 75 (mix de planes)** | **20** | **~16 meses** |
+| S/ 99 (todos Pro) | 15 | ~12 meses |
+| S/ 129 (Pro + addons) | 12 | ~10 meses |
 
 ---
 
-## Escenario Completo (Inversión: S/ 78,000 | Costo mensual: S/ 9,300)
+## Escenario Completo (Inversión: S/ 48,000 | Costo mensual: S/ 5,500)
 
-| Mes | Clientes acumulados | Ingreso mensual (S/) | Costo mensual (S/) | Flujo del mes | Flujo acumulado | Inversión restante |
-|---|---|---|---|---|---|---|
-| 1-4 | 0 (desarrollo) | 0 | 9,300 | –37,200 | –115,200 | 115,200 |
-| 5 | 5 beta | 0 | 9,300 | –9,300 | –124,500 | 124,500 |
-| 6 | 15 | 1,125 | 9,300 | –8,175 | –132,675 | 132,675 |
-| 7 | 25 | 1,875 | 9,300 | –7,425 | –140,100 | 140,100 |
-| 8 | 38 | 2,850 | 9,300 | –6,450 | –146,550 | 146,550 |
-| 9 | 50 | 3,750 | 9,300 | –5,550 | –152,100 | 152,100 |
-| 10 | 65 | 4,875 | 9,300 | –4,425 | –156,525 | 156,525 |
-| 11 | 80 | 6,000 | 9,300 | –3,300 | –159,825 | 159,825 |
-| 12 | 95 | 7,125 | 9,500 | –2,375 | –162,200 | 162,200 |
-| 13 | 110 | 8,250 | 9,500 | –1,250 | –163,450 | 163,450 |
-| 14 | 124 | 9,300 | 9,500 | –200 | –163,650 | 163,650 |
-| 15 | 140 | 10,500 | 9,500 | +1,000 | –162,650 | 162,650 |
-| 16 | 155 | 11,625 | 9,500 | +2,125 | –160,525 | 160,525 |
-| 17 | 170 | 12,750 | 9,500 | +3,250 | –157,275 | 157,275 |
-| 18 | 185 | 13,875 | 9,500 | +4,375 | –152,900 | 152,900 |
-| 19 | 200 | 15,000 | 9,500 | +5,500 | –147,400 | 147,400 |
-| 20 | 215 | 16,125 | 9,500 | +6,625 | –140,775 | 140,775 |
-| 21 | 230 | 17,250 | 9,800 | +7,450 | –133,325 | 133,325 |
-| 22 | 245 | 18,375 | 9,800 | +8,575 | –124,750 | 124,750 |
-| 23 | 260 | 19,500 | 9,800 | +9,700 | –115,050 | 115,050 |
-| 24 | 275 | 20,625 | 9,800 | +10,825 | –104,225 | 104,225 |
-| 25 | 290 | 21,750 | 10,000 | +11,750 | –92,475 | 92,475 |
-| 26 | 305 | 22,875 | 10,000 | +12,875 | –79,600 | 79,600 |
-| 27 | 320 | 24,000 | 10,000 | +14,000 | –65,600 | 65,600 |
-| 28 | 335 | 25,125 | 10,000 | +15,125 | –50,475 | 50,475 |
-| 29 | 350 | 26,250 | 10,000 | +16,250 | –34,225 | 34,225 |
-| 30 | 365 | 27,375 | 10,000 | +17,375 | –16,850 | 16,850 |
-| **31** | **380** | **28,500** | **10,000** | **+18,500** | **≈ 0** | **✅ Recuperado** |
+| Mes | Clientes acum. | Ingreso (S/) | Costo (S/) | Flujo del mes | Deuda acumulada |
+|---|---|---|---|---|---|
+| 1-4 | 0 (desarrollo) | 0 | 5,500 | –22,000 | –70,000 |
+| 5 | 10 (beta) | 0 | 5,500 | –5,500 | –75,500 |
+| 6 | 15 | 1,125 | 5,500 | –4,375 | –79,875 |
+| 7 | 22 | 1,650 | 5,500 | –3,850 | –83,725 |
+| 8 | 30 | 2,250 | 5,500 | –3,250 | –86,975 |
+| 9 | 40 | 3,000 | 5,500 | –2,500 | –89,475 |
+| 10 | 50 | 3,750 | 5,500 | –1,750 | –91,225 |
+| 11 | 60 | 4,500 | 5,500 | –1,000 | –92,225 |
+| 12 | 70 | 5,250 | 5,500 | –250 | –92,475 |
+| 13 | 80 | 6,000 | 5,500 | +500 | –91,975 |
+| 14 | 90 | 6,750 | 5,500 | +1,250 | –90,725 |
+| 15 | 100 | 7,500 | 5,500 | +2,000 | –88,725 |
+| 16 | 110 | 8,250 | 5,500 | +2,750 | –85,975 |
+| 17 | 120 | 9,000 | 5,500 | +3,500 | –82,475 |
+| 18 | 130 | 9,750 | 5,500 | +4,250 | –78,225 |
+| 19 | 140 | 10,500 | 5,500 | +5,000 | –73,225 |
+| 20 | 150 | 11,250 | 5,500 | +5,750 | –67,475 |
+| 21 | 160 | 12,000 | 5,500 | +6,500 | –60,975 |
+| 22 | 170 | 12,750 | 5,500 | +7,250 | –53,725 |
+| 23 | 180 | 13,500 | 5,500 | +8,000 | –45,725 |
+| 24 | 190 | 14,250 | 5,500 | +8,750 | –36,975 |
+| 25 | 200 | 15,000 | 5,500 | +9,500 | –27,475 |
+| 26 | 210 | 15,750 | 5,500 | +10,250 | –17,225 |
+| 27 | 220 | 16,500 | 5,500 | +11,000 | –6,225 |
+| **28** | **230** | **17,250** | **5,500** | **+11,750** | **≈ +5,525 ✅** |
 
-**📊 Recuperación de inversión (Escenario Completo): 31 meses (2 años 7 meses)**
+**📊 Recuperación de inversión (Escenario Completo): ~28 meses (2 años 4 meses)**
 
-> *Nota: El escenario completo requiere 4 meses de desarrollo sin ingresos y una base de clientes mayor para alcanzar el break-even. Sin embargo, una vez superado, las ganancias escalan mucho más rápido.*
+> Nota: Requiere 4 meses de desarrollo sin ingresos. Una vez superado el break-even a ~74 clientes, cada cliente adicional es ganancia neta del 85%.
 
 ---
 
