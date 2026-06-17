@@ -246,6 +246,19 @@ hr { margin:14px 0; border:none; border-top:1px solid #f0e2d5; }
 }
 .live-dot { width:8px; height:8px; border-radius:50%; background:#38a169; animation:pulse 1.5s infinite; }
 @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+/* Inventory */
+.inv-subnav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+.inv-subnav button { font-size:0.7rem; padding:5px 12px; border-radius:8px; border:1px solid #e2e8f0; background:white; cursor:pointer; }
+.inv-subnav button.active { background:#1a365d; color:white; border-color:#1a365d; }
+.inv-bar { height:8px; border-radius:4px; overflow:hidden; background:#e2e8f0; min-width:60px; }
+.inv-bar-fill { height:100%; border-radius:4px; transition:width 0.3s; }
+.inv-stat { font-size:0.7rem; padding:2px 8px; border-radius:6px; font-weight:600; }
+.inv-stat-ok { background:#c6f6d5; color:#22543d; }
+.inv-stat-low { background:#fefcbf; color:#744210; }
+.inv-stat-crit { background:#fed7d7; color:#742a2a; }
+.inv-card { background:white; border-radius:10px; border:1px solid #f0e2d5; padding:10px 12px; margin-bottom:8px; }
+.inv-chip { display:inline-block; font-size:0.6rem; padding:2px 8px; border-radius:10px; background:#f7fafc; color:#718096; margin-right:4px; }
 </style>
 </head>
 <body>
@@ -279,7 +292,13 @@ const QT = {
   inExtraOrder: false,
 
   // --- Empresa State ---
-  empresaScreen: 'dashboard',  // 'dashboard' | 'cocina'
+  empresaScreen: 'dashboard',  // 'dashboard' | 'cocina' | 'chat' | 'inventario'
+  invScreen: 'stock',  // 'stock' | 'kardex' | 'recetas' | 'mermas' | 'kanban' | 'articulos'
+  invArticulos: [],
+  invMovimientos: [],
+  invRecetas: [],
+  invMermas: [],
+  invKardexFiltro: '',
   kitchenOrderMode: 'chrono',  // 'chrono' | 'grouped'
   kitchenFilter: 'todos',
   kitchenGroupCatFilter: '',  // '' | 'entradas' | 'bebidas' | 'fondo' | 'postre'
@@ -501,6 +520,93 @@ function updateEmpresaKPI() {
 }
 
 // ============================================================
+// INVENTORY SEED DATA
+// ============================================================
+function seedInvData(){
+  if(QT.invArticulos.length>0)return;
+  
+  // CATEGORIES
+  const cats={'Carnes':'🥩','Verduras':'🥦','Lácteos':'🧀','Bebidas':'🥤','Abarrotes':'📦','Congelados':'❄️','Panadería':'🥖','Otros':'📎'};
+  const getCat=n=>{const m={'Lomo de res':'Carnes','Pollo entero':'Carnes','Filete de pescado':'Carnes','Picanha':'Carnes','Papas':'Verduras','Cebolla':'Verduras','Tomate':'Verduras','Lechuga':'Verduras','Limón':'Verduras','Ají':'Verduras','Arroz':'Abarrotes','Aceite vegetal':'Abarrotes','Sal':'Abarrotes','Pimienta':'Abarrotes','Harina':'Abarrotes','Azúcar':'Abarrotes','Queso parmesano':'Lácteos','Crema de leche':'Lácteos','Mantequilla':'Lácteos','Huevos':'Lácteos','Gaseosa':'Bebidas','Cerveza':'Bebidas','Café en grano':'Bebidas','Papas fritas':'Congelados','Helado de vainilla':'Congelados','Pan francés':'Panadería','Salsa de tomate':'Abarrotes','Mayonesa':'Abarrotes','Pasta':'Abarrotes'};return m[n]||'Otros';};
+  
+  QT.invArticulos=[
+    {id:1,nombre:'Lomo de res',stock:12,min:5,costo:28.00,unidad:'kg',proveedor:'Distribuidora Norte'},
+    {id:2,nombre:'Pollo entero',stock:20,min:8,costo:9.50,unidad:'kg',proveedor:'Avícola San Fernando'},
+    {id:3,nombre:'Filete de pescado',stock:8,min:5,costo:22.00,unidad:'kg',proveedor:'Pesquera Mar Azul'},
+    {id:4,nombre:'Picanha',stock:5,min:3,costo:35.00,unidad:'kg',proveedor:'Carnes Premium SAC'},
+    {id:5,nombre:'Papas',stock:50,min:15,costo:2.50,unidad:'kg',proveedor:'Mercado Mayorista'},
+    {id:6,nombre:'Cebolla',stock:15,min:5,costo:3.00,unidad:'kg',proveedor:'Mercado Mayorista'},
+    {id:7,nombre:'Tomate',stock:10,min:5,costo:4.00,unidad:'kg',proveedor:'Mercado Mayorista'},
+    {id:8,nombre:'Lechuga',stock:12,min:8,costo:2.00,unidad:'und',proveedor:'Mercado Mayorista'},
+    {id:9,nombre:'Limón',stock:8,min:4,costo:4.50,unidad:'kg',proveedor:'Mercado Mayorista'},
+    {id:10,nombre:'Ají',stock:3,min:2,costo:6.00,unidad:'kg',proveedor:'Mercado Mayorista'},
+    {id:11,nombre:'Arroz',stock:40,min:10,costo:3.80,unidad:'kg',proveedor:'Distribuidora Norte'},
+    {id:12,nombre:'Aceite vegetal',stock:15,min:5,costo:7.50,unidad:'L',proveedor:'Distribuidora Norte'},
+    {id:13,nombre:'Sal',stock:5,min:2,costo:2.00,unidad:'kg',proveedor:'Distribuidora Norte'},
+    {id:14,nombre:'Pimienta',stock:2,min:1,costo:15.00,unidad:'kg',proveedor:'Distribuidora Norte'},
+    {id:15,nombre:'Harina',stock:12,min:5,costo:3.50,unidad:'kg',proveedor:'Distribuidora Norte'},
+    {id:16,nombre:'Azúcar',stock:10,min:5,costo:3.80,unidad:'kg',proveedor:'Distribuidora Norte'},
+    {id:17,nombre:'Queso parmesano',stock:4,min:2,costo:28.00,unidad:'kg',proveedor:'Lácteos La Molina'},
+    {id:18,nombre:'Crema de leche',stock:8,min:4,costo:6.50,unidad:'L',proveedor:'Lácteos La Molina'},
+    {id:19,nombre:'Mantequilla',stock:6,min:3,costo:5.00,unidad:'kg',proveedor:'Lácteos La Molina'},
+    {id:20,nombre:'Huevos',stock:60,min:20,costo:0.50,unidad:'und',proveedor:'Avícola San Fernando'},
+    {id:21,nombre:'Gaseosa',stock:48,min:24,costo:1.80,unidad:'und',proveedor:'Bebidas del Sur'},
+    {id:22,nombre:'Cerveza',stock:36,min:24,costo:2.50,unidad:'und',proveedor:'Bebidas del Sur'},
+    {id:23,nombre:'Café en grano',stock:4,min:2,costo:45.00,unidad:'kg',proveedor:'Café de Altura'},
+    {id:24,nombre:'Papas fritas (cong)',stock:20,min:8,costo:8.00,unidad:'kg',proveedor:'Congelados Polar'},
+    {id:25,nombre:'Helado de vainilla',stock:8,min:4,costo:12.00,unidad:'L',proveedor:'Congelados Polar'},
+    {id:26,nombre:'Pan francés',stock:30,min:15,costo:1.00,unidad:'und',proveedor:'Panadería El Trigal'},
+    {id:27,nombre:'Salsa de tomate',stock:6,min:3,costo:5.00,unidad:'L',proveedor:'Distribuidora Norte'},
+    {id:28,nombre:'Mayonesa',stock:4,min:2,costo:6.00,unidad:'L',proveedor:'Distribuidora Norte'},
+    {id:29,nombre:'Pasta',stock:10,min:5,costo:4.00,unidad:'kg',proveedor:'Distribuidora Norte'},
+    {id:30,nombre:'Maracuyá',stock:5,min:3,costo:8.00,unidad:'kg',proveedor:'Mercado Mayorista'}
+  ].map(a=>({...a,categoria:getCat(a.nombre)}));
+  
+  // Recent movements (last 7 days)
+  const now=new Date();
+  QT.invMovimientos=[];
+  let mid=0;
+  QT.invArticulos.forEach(a=>{
+    const qty=Math.round(a.stock*0.4+Math.random()*a.stock*0.3);
+    const d=new Date(now);d.setDate(d.getDate()-Math.floor(Math.random()*7));
+    QT.invMovimientos.push({id:++mid,articuloId:a.id,tipo:'entrada',cantidad:qty,fecha:d,motivo:'Compra a proveedor',costoUnitario:a.costo});
+    const use=Math.round(qty*0.6+Math.random()*qty*0.3);
+    const d2=new Date(d);d2.setDate(d2.getDate()+Math.floor(Math.random()*3));
+    if(d2<=now)QT.invMovimientos.push({id:++mid,articuloId:a.id,tipo:'salida',cantidad:use,fecha:d2,motivo:'Consumo cocina',costoUnitario:a.costo});
+  });
+  QT.invMovimientos.sort((a,b)=>b.fecha-a.fecha);
+  
+  // Recipes
+  QT.invRecetas=[
+    {id:1,plato:'Lomo saltado',rendimiento:1,ingredientes:[{artId:1,cant:0.2},{artId:6,cant:0.1},{artId:7,cant:0.1},{artId:5,cant:0.15},{artId:11,cant:0.15},{artId:12,cant:0.03},{artId:13,cant:0.005},{artId:9,cant:0.02}]},
+    {id:2,plato:'Picanha a la parrilla',rendimiento:1,ingredientes:[{artId:4,cant:0.3},{artId:13,cant:0.005},{artId:14,cant:0.002},{artId:12,cant:0.02}]},
+    {id:3,plato:'Ceviche mixto',rendimiento:1,ingredientes:[{artId:3,cant:0.15},{artId:9,cant:0.05},{artId:6,cant:0.05},{artId:10,cant:0.01},{artId:13,cant:0.003}]},
+    {id:4,plato:'Ají de gallina',rendimiento:1,ingredientes:[{artId:2,cant:0.2},{artId:26,cant:1},{artId:18,cant:0.1},{artId:10,cant:0.01},{artId:11,cant:0.1},{artId:6,cant:0.05}]},
+    {id:5,plato:'Hamburguesa Clásica',rendimiento:1,ingredientes:[{artId:1,cant:0.18},{artId:26,cant:1},{artId:8,cant:0.03},{artId:7,cant:0.05},{artId:27,cant:0.02},{artId:28,cant:0.01}]},
+    {id:6,plato:'Hamburguesa BBQ',rendimiento:1,ingredientes:[{artId:1,cant:0.2},{artId:26,cant:1},{artId:6,cant:0.05},{artId:27,cant:0.02},{artId:28,cant:0.01}]},
+    {id:7,plato:'Papas bravas',rendimiento:1,ingredientes:[{artId:5,cant:0.2},{artId:12,cant:0.03},{artId:10,cant:0.005},{artId:28,cant:0.01}]},
+    {id:8,plato:'Ensalada César',rendimiento:1,ingredientes:[{artId:8,cant:0.1},{artId:17,cant:0.03},{artId:2,cant:0.1},{artId:19,cant:0.01},{artId:9,cant:0.01}]},
+    {id:9,plato:'Tarta de queso',rendimiento:8,ingredientes:[{artId:17,cant:0.3},{artId:20,cant:3},{artId:18,cant:0.2},{artId:15,cant:0.2},{artId:16,cant:0.15},{artId:19,cant:0.1}]},
+    {id:10,plato:'Volcán de chocolate',rendimiento:1,ingredientes:[{artId:15,cant:0.1},{artId:16,cant:0.08},{artId:20,cant:1},{artId:19,cant:0.05}]},
+    {id:11,plato:'Maracuyá sour',rendimiento:1,ingredientes:[{artId:30,cant:0.1},{artId:9,cant:0.02},{artId:16,cant:0.03}]},
+    {id:12,plato:'Café',rendimiento:1,ingredientes:[{artId:23,cant:0.01}]}
+  ];
+  
+  // Waste records
+  QT.invMermas=[];
+  let wrid=0;
+  [5,6,7,8,9,24,26].forEach(idx=>{
+    const a=QT.invArticulos.find(x=>x.id===idx);if(!a)return;
+    for(let i=0;i<2;i++){
+      const d=new Date(now);d.setDate(d.getDate()-Math.floor(Math.random()*5));
+      const cant=+(Math.random()*2+0.1).toFixed(2);
+      QT.invMermas.push({id:++wrid,articuloId:idx,cantidad:cant,fecha:d,motivo:['Caducidad','Sobreproducción','Mala manipulación','Devolución cliente'][Math.floor(Math.random()*4)],costo:a.costo});
+    }
+  });
+  QT.invMermas.sort((a,b)=>b.fecha-a.fecha);
+}
+
+// ============================================================
 // RENDER ENGINE
 // ============================================================
 function render() {
@@ -536,6 +642,7 @@ function render() {
     hP.classList.add('hidden'); hL.classList.add('hidden');
     footer.textContent='QuickTable · Panel Empresarial · '+formatDate(new Date());
     seedDemoOrders();
+    seedInvData();
     renderEmpresa(main);
   }
 }
@@ -758,10 +865,12 @@ function renderEmpresa(c){
         <button class="emp-tab ${QT.empresaScreen==='dashboard'?'active':''}" data-emp-tab="dashboard">📊 Dashboard</button>
         <button class="emp-tab ${QT.empresaScreen==='cocina'?'active':''}" data-emp-tab="cocina">👨‍🍳 Pedidos · Cocina</button>
         <button class="emp-tab ${QT.empresaScreen==='chat'?'active':''}" data-emp-tab="chat">💬 Chat</button>
+        <button class="emp-tab ${QT.empresaScreen==='inventario'?'active':''}" data-emp-tab="inventario">📦 Inventario</button>
       </div>
       <div class="emp-tab-content ${QT.empresaScreen==='dashboard'?'active':''}" id="emp-tab-dashboard"></div>
       <div class="emp-tab-content ${QT.empresaScreen==='cocina'?'active':''}" id="emp-tab-cocina"></div>
       <div class="emp-tab-content ${QT.empresaScreen==='chat'?'active':''}" id="emp-tab-chat"></div>
+      <div class="emp-tab-content ${QT.empresaScreen==='inventario'?'active':''}" id="emp-tab-inventario"></div>
     </div>`;
   document.querySelectorAll('.emp-tab').forEach(tab=>{
     tab.onclick=()=>{QT.empresaScreen=tab.dataset.empTab;renderEmpresa(c);};
@@ -769,6 +878,7 @@ function renderEmpresa(c){
   renderEmpDash(document.getElementById('emp-tab-dashboard'));
   renderEmpCocina(document.getElementById('emp-tab-cocina'));
   renderEmpChat(document.getElementById('emp-tab-chat'));
+  renderEmpInventario(document.getElementById('emp-tab-inventario'));
 }
 
 function renderEmpDash(el){
@@ -1186,6 +1296,223 @@ function sendChatMsg(el){
   else reply=['Entendido 👍','Ok, tomamos nota 📝','Perfecto ✅','Anotado ✍️','Recibido 📩'][Math.floor(Math.random()*5)];
   setTimeout(()=>{QT.chatMessages.push({sender:'QuickTable',text:reply,time:new Date()});renderEmpChat(el);},600+Math.random()*1200);
   setTimeout(()=>renderEmpChat(el),50);
+}
+
+// ============================================================
+// INVENTORY RENDER
+// ============================================================
+function renderEmpInventario(el){
+  if(!el)return;
+  
+  const subnav=[
+    {id:'stock',label:'📊 Stock'},
+    {id:'movimientos',label:'📋 Movimientos'},
+    {id:'kardex',label:'📇 Kardex'},
+    {id:'recetas',label:'📖 Recetas'},
+    {id:'mermas',label:'🗑️ Mermas'},
+    {id:'kanban',label:'📌 Kanban'}
+  ];
+  const arts=QT.invArticulos;
+  const movs=QT.invMovimientos;
+  const recs=QT.invRecetas;
+  const mermas=QT.invMermas;
+  const scr=QT.invScreen;
+  
+  function artName(id){const a=arts.find(x=>x.id===id);return a?a.nombre:'?'}
+  function getCategory(name){const a=arts.find(x=>x.nombre===name);return a?a.categoria:''}
+  
+  function stockStatus(a){
+    const ratio=a.stock/a.min;
+    if(ratio>=2) return {cls:'ok',label:'Óptimo',color:'#38a169'};
+    if(ratio>=1) return {cls:'low',label:'Bajo',color:'#d69e2e'};
+    return {cls:'crit',label:'Crítico',color:'#e53e3e'};
+  }
+  
+  let h='';
+  
+  // Subnav
+  h+='<div class="inv-subnav">';
+  subnav.forEach(s=>{h+=`<button class="inv-sub-btn ${scr===s.id?'active':''}" data-inv="${s.id}">${s.label}</button>`;});
+  h+='</div>';
+  
+  // === STOCK ===
+  if(scr==='stock'){
+    h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">';
+    h+=`<span style="font-size:0.75rem;color:#718096;">${arts.length} artículos</span>`;
+    h+=`<span style="font-size:0.7rem;">🥩 ${arts.filter(a=>a.stock>=a.min*2).length} óptimos · ⚠️ ${arts.filter(a=>a.stock<a.min*2&&a.stock>=a.min).length} bajos · 🔴 ${arts.filter(a=>a.stock<a.min).length} críticos</span>`;
+    h+='</div>';
+    h+='<table class="emp-table"><thead><tr><th>Artículo</th><th>Categoría</th><th>Stock</th><th>Mínimo</th><th>Estado</th><th>Costo</th><th>Valor Stock</th></tr></thead><tbody>';
+    arts.forEach(a=>{
+      const st=stockStatus(a);
+      const val=a.stock*a.costo;
+      const barPct=Math.min(100,(a.stock/(a.min*2))*100);
+      h+=`<tr>
+        <td style="font-weight:600;font-size:0.75rem;">${a.nombre}</td>
+        <td style="font-size:0.65rem;color:#718096;">${a.categoria}</td>
+        <td style="font-weight:600;">${a.stock} ${a.unidad}</td>
+        <td style="font-size:0.7rem;color:#a0aec0;">${a.min} ${a.unidad}</td>
+        <td><div class="inv-bar"><div class="inv-bar-fill" style="width:${barPct}%;background:${st.color}"></div></div></td>
+        <td style="font-size:0.7rem;">${formatCurrency(a.costo)}/${a.unidad}</td>
+        <td style="font-size:0.75rem;font-weight:600;">${formatCurrency(val)}</td>
+      </tr>`;
+    });
+    h+='</tbody></table>';
+    const totalInv=arts.reduce((s,a)=>s+a.stock*a.costo,0);
+    h+=`<div style="text-align:right;margin-top:10px;font-size:0.8rem;color:#2d3748;font-weight:600;">Valor total del inventario: ${formatCurrency(totalInv)}</div>`;
+  }
+  
+  // === MOVIMIENTOS ===
+  else if(scr==='movimientos'){
+    h+='<div style="display:flex;gap:8px;margin-bottom:10px;align-items:center;">';
+    h+=`<span style="font-size:0.75rem;color:#718096;">Últimos ${movs.length} movimientos</span>`;
+    h+='</div>';
+    h+='<table class="emp-table"><thead><tr><th>#</th><th>Fecha</th><th>Artículo</th><th>Tipo</th><th>Cantidad</th><th>Costo U.</th><th>Total</th><th>Motivo</th></tr></thead><tbody>';
+    movs.slice(0,50).forEach(m=>{
+      const a=arts.find(x=>x.id===m.articuloId);
+      h+=`<tr>
+        <td style="font-size:0.65rem;color:#a0aec0;">${m.id}</td>
+        <td style="font-size:0.7rem;">${formatDate(m.fecha)}</td>
+        <td style="font-weight:600;font-size:0.75rem;">${a?a.nombre:'?'}</td>
+        <td><span class="inv-stat ${m.tipo==='entrada'?'inv-stat-ok':'inv-stat-crit'}" style="font-size:0.6rem;">${m.tipo==='entrada'?'📥 Entrada':'📤 Salida'}</span></td>
+        <td style="font-weight:600;">${m.cantidad} ${a?a.unidad:''}</td>
+        <td style="font-size:0.7rem;">${formatCurrency(m.costoUnitario)}</td>
+        <td style="font-size:0.75rem;font-weight:600;">${formatCurrency(m.cantidad*m.costoUnitario)}</td>
+        <td style="font-size:0.7rem;color:#718096;">${m.motivo}</td>
+      </tr>`;
+    });
+    h+='</tbody></table>';
+  }
+  
+  // === KARDEX ===
+  else if(scr==='kardex'){
+    // Article selector
+    const selArt=QT.invKardexFiltro||arts[0]?.id||0;
+    h+='<div style="display:flex;gap:8px;margin-bottom:10px;align-items:center;">';
+    h+=`<label style="font-size:0.75rem;font-weight:600;">Artículo:</label>
+      <select id="kardexArtSelect" style="padding:5px 10px;border-radius:8px;border:1px solid #e2e8f0;font-size:0.75rem;">`;
+    arts.forEach(a=>h+=`<option value="${a.id}" ${a.id==selArt?'selected':''}>${a.nombre}</option>`);
+    h+='</select>';
+    h+='</div>';
+    
+    const artMovs=movs.filter(m=>m.articuloId==selArt).sort((a,b)=>a.fecha-b.fecha);
+    const art=arts.find(a=>a.id==selArt);
+    h+='<table class="emp-table"><thead><tr><th>#</th><th>Fecha</th><th>Concepto</th><th>Entrada</th><th>Salida</th><th>Saldo</th><th>Costo U.</th><th>Valor Total</th></tr></thead><tbody>';
+    let saldo=0;
+    artMovs.forEach((m,i)=>{
+      if(m.tipo==='entrada') saldo+=m.cantidad; else saldo-=m.cantidad;
+      h+=`<tr>
+        <td style="font-size:0.65rem;color:#a0aec0;">${i+1}</td>
+        <td style="font-size:0.7rem;">${formatDate(m.fecha)}</td>
+        <td style="font-size:0.7rem;">${m.motivo}</td>
+        <td style="color:#38a169;font-weight:600;">${m.tipo==='entrada'?m.cantidad:'-'}</td>
+        <td style="color:#e53e3e;font-weight:600;">${m.tipo==='salida'?m.cantidad:'-'}</td>
+        <td style="font-weight:700;">${saldo} ${art?art.unidad:''}</td>
+        <td style="font-size:0.7rem;">${formatCurrency(m.costoUnitario)}</td>
+        <td style="font-weight:600;">${formatCurrency(saldo*m.costoUnitario)}</td>
+      </tr>`;
+    });
+    if(artMovs.length===0) h+='<tr><td colspan="8" style="text-align:center;padding:20px;color:#a0aec0;">Sin movimientos para este artículo</td></tr>';
+    h+='</tbody></table>';
+    if(art)h+=`<div style="margin-top:10px;font-size:0.7rem;color:#718096;">Stock actual: ${art.stock} ${art.unidad} · Mínimo: ${art.min} · Costo prom: ${formatCurrency(art.costo)}/${art.unidad}</div>`;
+  }
+  
+  // === RECETAS ===
+  else if(scr==='recetas'){
+    h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">';
+    recs.forEach(r=>{
+      h+=`<div class="inv-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-weight:700;font-size:0.85rem;color:#2d3748;">${r.plato}</span>
+          <span style="font-size:0.65rem;color:#a0aec0;background:#f7fafc;padding:2px 8px;border-radius:6px;">Rinde: ${r.rendimiento}</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:3px;">
+          ${r.ingredientes.map(ing=>{
+            const a=arts.find(x=>x.id===ing.artId);
+            const maxPorc=r.rendimiento;
+            const cost=(ing.cant/(r.rendimiento||1))*a?.costo||0;
+            return `<span class="inv-chip" style="display:inline-flex;align-items:center;gap:4px;">
+              ${a?a.nombre:'?'}
+              <span style="font-weight:600;color:#c2410c;">${(ing.cant/(r.rendimiento||1)).toFixed(2)}${a?a.unidad:''}</span>
+              <span style="font-size:0.55rem;color:#a0aec0;">${formatCurrency(cost)}</span>
+            </span>`;
+          }).join('')}
+        </div>
+        <div style="margin-top:6px;font-size:0.65rem;color:#c2410c;font-weight:600;">
+          Costo receta: ${formatCurrency(r.ingredientes.reduce((s,ing)=>{
+            const a=arts.find(x=>x.id===ing.artId);
+            return s+(ing.cant/(r.rendimiento||1))*(a?.costo||0);
+          },0))}
+        </div>
+      </div>`;
+    });
+    h+='</div>';
+  }
+  
+  // === MERMAS ===
+  else if(scr==='mermas'){
+    const totalMerma=mermas.reduce((s,m)=>s+m.cantidad*m.costo,0);
+    h+='<div style="display:flex;justify-content:space-between;margin-bottom:10px;">';
+    h+=`<span style="font-size:0.75rem;color:#718096;">${mermas.length} registros</span>`;
+    h+=`<span style="font-size:0.75rem;font-weight:700;color:#e53e3e;">Pérdida total: ${formatCurrency(totalMerma)}</span>`;
+    h+='</div>';
+    h+='<table class="emp-table"><thead><tr><th>Fecha</th><th>Artículo</th><th>Cantidad</th><th>Costo</th><th>Total</th><th>Motivo</th></tr></thead><tbody>';
+    mermas.forEach(m=>{
+      const a=arts.find(x=>x.id===m.articuloId);
+      h+=`<tr>
+        <td style="font-size:0.7rem;">${formatDate(m.fecha)}</td>
+        <td style="font-weight:600;font-size:0.75rem;">${a?a.nombre:'?'}</td>
+        <td>${m.cantidad} ${a?a.unidad:''}</td>
+        <td style="font-size:0.7rem;">${formatCurrency(m.costo)}</td>
+        <td style="font-weight:600;color:#e53e3e;">${formatCurrency(m.cantidad*m.costo)}</td>
+        <td style="font-size:0.7rem;color:#718096;"><span class="inv-chip">${m.motivo}</span></td>
+      </tr>`;
+    });
+    h+='</tbody></table>';
+  }
+  
+  // === KANBAN ===
+  else if(scr==='kanban'){
+    const crit=arts.filter(a=>a.stock<a.min);
+    const low=arts.filter(a=>a.stock>=a.min&&a.stock<a.min*2);
+    const ok=arts.filter(a=>a.stock>=a.min*2);
+    
+    h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:14px;">';
+    [
+      {label:'🔴 Reponer urgente',items:crit,color:'#e53e3e',bg:'#fff5f5',border:'#feb2b2'},
+      {label:'🟡 Por reponer',items:low,color:'#d69e2e',bg:'#fffff0',border:'#f6e05e'},
+      {label:'🟢 Stock suficiente',items:ok,color:'#38a169',bg:'#f0fff4',border:'#9ae6b4'}
+    ].forEach(col=>{
+      h+=`<div style="background:${col.bg};border:1px solid ${col.border};border-radius:12px;padding:10px;">
+        <div style="font-weight:700;font-size:0.8rem;color:${col.color};margin-bottom:8px;">${col.label} (${col.items.length})</div>`;
+      col.items.forEach(a=>{
+        const pct=Math.min(100,(a.stock/(a.min*2))*100);
+        h+=`<div style="background:white;border-radius:8px;padding:8px;margin-bottom:6px;border:1px solid ${col.border}40;">
+          <div style="display:flex;justify-content:space-between;font-weight:600;font-size:0.75rem;">
+            <span>${a.nombre}</span>
+            <span style="color:${col.color};">${a.stock}/${a.min} ${a.unidad}</span>
+          </div>
+          <div class="inv-bar" style="margin-top:4px;"><div class="inv-bar-fill" style="width:${pct}%;background:${col.color}"></div></div>
+          <div style="font-size:0.6rem;color:#a0aec0;margin-top:4px;">${a.categoria} · ${a.proveedor}</div>
+        </div>`;
+      });
+      if(col.items.length===0)h+=`<div style="font-size:0.7rem;color:#a0aec0;text-align:center;padding:10px;">Ninguno</div>`;
+      h+='</div>';
+    });
+    h+='</div>';
+  }
+  
+  el.innerHTML=h;
+  
+  // Subnav events
+  document.querySelectorAll('.inv-sub-btn').forEach(btn=>{
+    btn.onclick=()=>{QT.invScreen=btn.dataset.inv;renderEmpInventario(el);};
+  });
+  
+  // Kardex select event
+  document.getElementById('kardexArtSelect')?.addEventListener('change',e=>{
+    QT.invKardexFiltro=parseInt(e.target.value);
+    renderEmpInventario(el);
+  });
 }
 
 // ============================================================
