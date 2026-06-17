@@ -689,15 +689,18 @@ function renderEmpresa(c){
       <div class="emp-tabs">
         <button class="emp-tab ${QT.empresaScreen==='dashboard'?'active':''}" data-emp-tab="dashboard">📊 Dashboard</button>
         <button class="emp-tab ${QT.empresaScreen==='cocina'?'active':''}" data-emp-tab="cocina">👨‍🍳 Pedidos · Cocina</button>
+        <button class="emp-tab ${QT.empresaScreen==='chat'?'active':''}" data-emp-tab="chat">💬 Chat</button>
       </div>
       <div class="emp-tab-content ${QT.empresaScreen==='dashboard'?'active':''}" id="emp-tab-dashboard"></div>
       <div class="emp-tab-content ${QT.empresaScreen==='cocina'?'active':''}" id="emp-tab-cocina"></div>
+      <div class="emp-tab-content ${QT.empresaScreen==='chat'?'active':''}" id="emp-tab-chat"></div>
     </div>`;
   document.querySelectorAll('.emp-tab').forEach(tab=>{
     tab.onclick=()=>{QT.empresaScreen=tab.dataset.empTab;renderEmpresa(c);};
   });
   renderEmpDash(document.getElementById('emp-tab-dashboard'));
   renderEmpCocina(document.getElementById('emp-tab-cocina'));
+  renderEmpChat(document.getElementById('emp-tab-chat'));
 }
 
 function renderEmpDash(el){
@@ -917,6 +920,108 @@ function renderGrouped(orders,card){
   const lb={nuevo:'🆕 Nuevos',preparando:'👨‍🍳 En preparación',listo:'✅ Listos para entregar',entregado:'🚀 Entregados'};
   let h='';so.forEach(s=>{if(g[s]&&g[s].length>0)h+=`<div class="order-group"><div class="order-group-title">${lb[s]} <span>${g[s].length}</span></div>${g[s].map(o=>card(o)).join('')}</div>`;});
   return h||`<div class="empty-state" style="padding:40px 0;"><div>🍳</div><p>No hay pedidos que mostrar</p></div>`;
+}
+
+// ============================================================
+// CHAT
+// ============================================================
+function renderEmpChat(el){
+  if(!el) return;
+  const view=QT.chatView;
+  const msgs=QT.chatMessages;
+  const files=QT.chatFiles;
+
+  el.innerHTML=`
+    <div class="emp-chat-card">
+      <div class="emp-chat-tabs">
+        <button class="${view==='chat'?'active':''}" data-cview="chat" style="padding:6px 14px;border-radius:8px;border:1px solid #e2e8f0;background:${view==='chat'?'#1a365d':'white'};font-size:0.75rem;cursor:pointer;font-weight:600;width:auto;margin:0;box-shadow:none;color:${view==='chat'?'white':'#4a5568'};">💬 Chat</button>
+        <button class="${view==='archivos'?'active':''}" data-cview="archivos" style="padding:6px 14px;border-radius:8px;border:1px solid #e2e8f0;background:${view==='archivos'?'#1a365d':'white'};font-size:0.75rem;cursor:pointer;font-weight:600;width:auto;margin:0;box-shadow:none;color:${view==='archivos'?'white':'#4a5568'};">📁 Archivos (${Object.values(files).reduce((s,a)=>s+a.length,0)})</button>
+      </div>
+    </div>
+    ${view==='chat' ? renderChatView() : renderFilesView()}
+  `;
+  el.querySelectorAll('[data-cview]').forEach(btn=>{btn.onclick=()=>{QT.chatView=btn.dataset.cview;renderEmpChat(el);};});
+  const inp=el.querySelector('#chatInput');
+  if(inp) inp.onkeydown=e=>{if(e.key==='Enter')sendChatMsg(el);};
+  el.querySelector('#chatPhotoBtn')?.addEventListener('click',()=>document.getElementById('chatPhotoFile')?.click());
+  el.querySelector('#chatPhotoFile')?.addEventListener('change',function(){if(this.files[0])handleChatFile(this.files[0],'photo',el);this.value='';});
+  el.querySelector('#chatAudioBtn')?.addEventListener('click',()=>document.getElementById('chatAudioFile')?.click());
+  el.querySelector('#chatAudioFile')?.addEventListener('change',function(){if(this.files[0])handleChatFile(this.files[0],'audio',el);this.value='';});
+  el.querySelector('#chatDocBtn')?.addEventListener('click',()=>document.getElementById('chatDocFile')?.click());
+  el.querySelector('#chatDocFile')?.addEventListener('change',function(){if(this.files[0])handleChatFile(this.files[0],'doc',el);this.value='';});
+  el.querySelector('#chatSendBtn')?.addEventListener('click',()=>sendChatMsg(el));
+  const cont=el.querySelector('.emp-chat-msgs');
+  if(cont) cont.scrollTop=cont.scrollHeight;
+}
+function renderChatView(){
+  const msgs=QT.chatMessages,files=QT.chatFiles;
+  let h='<div class="emp-chat-card" style="flex:1;display:flex;flex-direction:column;min-height:300px;"><div class="emp-chat-msgs" style="flex:1;overflow-y:auto;max-height:340px;min-height:200px;padding:4px 0;">';
+  if(msgs.length===0) h+='<div class="empty-state" style="padding:30px 0;"><div>💬</div><p style="font-size:0.8rem;">Inicia la conversación</p><p style="font-size:0.7rem;color:#a0aec0;">Puedes enviar fotos, audio y documentos</p></div>';
+  else msgs.forEach(m=>{
+    const isOwn=m.sender==='yo';
+    const avatar=m.sender==='yo'?'P':m.sender.charAt(0).toUpperCase();
+    h+='<div class="emp-chat-msg '+(isOwn?'own':'')+'"><div class="emp-chat-avatar '+(m.sender==='sistema'?'bot':'')+'">'+avatar+'</div><div class="emp-chat-bubble">'+(m.text||'')+(m.file?renderFileInMsg(m.file):'')+'<span class="chat-time">'+formatTime(m.time)+'</span></div></div>';
+  });
+  h+='</div><div class="emp-chat-input-area"><input type="text" id="chatInput" placeholder="Escribe un mensaje..."><input type="file" id="chatPhotoFile" accept="image/*" style="display:none"><input type="file" id="chatAudioFile" accept="audio/*" style="display:none"><input type="file" id="chatDocFile" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" style="display:none"><button id="chatPhotoBtn" class="chat-btn" title="Foto" style="background:#f0e2d5;color:#5a4a3a;">📷</button><button id="chatAudioBtn" class="chat-btn" title="Audio" style="background:#f0e2d5;color:#5a4a3a;">🎤</button><button id="chatDocBtn" class="chat-btn" title="Documento" style="background:#f0e2d5;color:#5a4a3a;">📎</button><button id="chatSendBtn" class="chat-btn send">➤</button></div></div>';
+  return h;
+}
+function renderFileInMsg(file){
+  if(file.type==='photo') return '<div class="emp-chat-file-attach"><img src="'+file.data+'" alt="'+file.name+'"></div>';
+  if(file.type==='audio') return '<div class="emp-chat-file-attach">🎤 <span>'+(file.name.length>20?file.name.slice(0,20)+'...':file.name)+'</span><audio controls src="'+file.data+'" style="height:32px;width:120px;margin-left:4px;"></audio></div>';
+  const ext=file.name.split('.').pop().toLowerCase();
+  const icon={pdf:'📄',doc:'📝',docx:'📝',xls:'📊',xlsx:'📊',txt:'📄'};
+  return '<div class="emp-chat-file-attach">'+(icon[ext]||'📄')+' '+(file.name.length>25?file.name.slice(0,25)+'...':file.name)+' <a href="'+file.data+'" download="'+file.name+'" style="margin-left:auto;color:#c2410c;font-weight:600;text-decoration:none;">⬇</a></div>';
+}
+function renderFilesView(){
+  const files=QT.chatFiles;
+  let h='<div class="emp-chat-card"><h3 style="font-size:0.9rem;margin-bottom:12px;color:#1a365d;">📁 Archivos compartidos</h3>';
+  [['photos','📷','Fotos'],['audio','🎤','Audio'],['docs','📄','Documentos']].forEach(cat=>{
+    const items=files[cat[0]];
+    h+='<div style="margin-bottom:16px;"><div style="font-size:0.8rem;font-weight:600;color:#4a5568;margin-bottom:8px;">'+cat[1]+' '+cat[2]+' ('+items.length+')</div><div class="emp-chat-file-grid">';
+    if(items.length===0) h+='<span style="font-size:0.7rem;color:#a0aec0;grid-column:1/-1;">Sin archivos</span>';
+    else items.forEach(f=>{
+      if(f.type==='photo') h+='<div class="emp-chat-file-item"><img src="'+f.data+'" alt="'+f.name+'"><span class="file-name">'+f.name+'</span></div>';
+      else{
+        const ext=f.name.split('.').pop().toLowerCase();
+        const icon={wav:'🎤',mp3:'🎵',m4a:'🎤',ogg:'🎤',pdf:'📄',doc:'📝',docx:'📝',xls:'📊',xlsx:'📊',txt:'📄'};
+        h+='<div class="emp-chat-file-item"><span class="file-icon">'+(icon[ext]||'📄')+'</span><span class="file-name">'+f.name+'</span></div>';
+      }
+    });
+    h+='</div></div>';
+  });
+  return h+'</div>';
+}
+function handleChatFile(file,type,el){
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const fileObj={name:file.name,type,data:e.target.result,time:new Date()};
+    const folder=type==='photo'?'photos':type==='audio'?'audio':'docs';
+    QT.chatFiles[folder].push(fileObj);
+    QT.chatMessages.push({sender:'yo',text:'',file:fileObj,time:new Date()});
+    setTimeout(()=>{
+      const resp=['✅ Archivo recibido y adjuntado a su carpeta','👍 Gracias, lo guardamos en '+folder,'📁 Archivo almacenado en '+folder][Math.floor(Math.random()*3)];
+      QT.chatMessages.push({sender:'QuickTable',text:resp,time:new Date()});
+      renderEmpChat(el);
+    },800);
+    renderEmpChat(el);
+  };
+  reader.readAsDataURL(file);
+}
+function sendChatMsg(el){
+  const inp=document.getElementById('chatInput');
+  if(!inp||!inp.value.trim()) return;
+  QT.chatMessages.push({sender:'yo',text:inp.value.trim(),time:new Date()});
+  inp.value='';
+  const txt=QT.chatMessages[QT.chatMessages.length-1].text.toLowerCase();
+  let reply;
+  if(txt.includes('hola')||txt.includes('buenas')) reply='¡Hola! ¿En qué puedo ayudarte?';
+  else if(txt.includes('pedido')||txt.includes('orden')) reply='Los pedidos los ves en la pestaña Cocina 🍳';
+  else if(txt.includes('gracias')) reply='¡De nada! 🙌';
+  else if(txt.includes('venta')||txt.includes('kpi')) reply='Los indicadores están en el Dashboard 📊';
+  else if(txt.includes('foto')||txt.includes('archivo')) reply='Puedes enviar fotos, audio y docs con los botones de abajo 📎';
+  else reply=['Entendido 👍','Ok, tomamos nota 📝','Perfecto ✅','Anotado ✍️','Recibido 📩'][Math.floor(Math.random()*5)];
+  setTimeout(()=>{QT.chatMessages.push({sender:'QuickTable',text:reply,time:new Date()});renderEmpChat(el);},600+Math.random()*1200);
+  setTimeout(()=>renderEmpChat(el),50);
 }
 
 // ============================================================
