@@ -316,46 +316,104 @@ function sendOrderToKitchen(orderItems, type, mesaLabel) {
 function seedDemoOrders() {
   if (QT.seeded) return;
   QT.seeded = true;
-  const mesas = ['Mesa 1','Mesa 2','Mesa 3','Mesa 4','Barra','Mesa 7'];
+  const mesas = ['Mesa 1','Mesa 2','Mesa 3','Mesa 4','Barra','VIP'];
   const statuses = ['nuevo','preparando','listo','entregado'];
-  const names = ['Papas bravas','Ensalada César','Hamburguesa Clásica','Lomo saltado','Picanha','Gaseosa','Cerveza artesanal','Tarta de queso'];
-  const prices = [4.90,6.50,9.90,12.90,15.90,2.50,4.00,4.50];
-  const seedMonths=[{y:2024,m:5},{y:2025,m:0},{y:2025,m:5},{y:2025,m:11},{y:2026,m:0},{y:2026,m:1},{y:2026,m:2},{y:2026,m:3},{y:2026,m:4},{y:2026,m:5}];
-  seedMonths.forEach((sm,si)=>{
-    const daysInM=new Date(sm.y,sm.m+1,0).getDate();
-    for(let d=1;d<=daysInM;d+=Math.max(1,Math.floor(daysInM/4))){
-      if(Math.random()>0.4) continue;
-      const st=statuses[Math.floor(Math.random()*statuses.length)];
-      const now=new Date(sm.y,sm.m,d,Math.floor(Math.random()*12)+10,Math.floor(Math.random()*60));
-      const items=[];
-      for(let j=0;j<1+Math.floor(Math.random()*3);j++){
-        const idx=Math.floor(Math.random()*names.length);
-        items.push({nombre:names[idx],precio:prices[idx],cantidad:1+Math.floor(Math.random()*2)});
-      }
-      QT.kitchenOrders.push({
-        id: ++QT.orderIdCounter, mesa: mesas[si%mesas.length],
-        items, type: Math.random()>0.5?'base':'extra', status: st, created: now,
-        createdStr: formatDate(now)+' '+formatTime(now),
-        total: items.reduce((s,it)=>s+it.precio*it.cantidad,0)
-      });
-    }
-  });
-  // Also add some today's orders for the 'hora' view
-  for(let i=0;i<8;i++){
-    const st=statuses[Math.floor(Math.random()*3)];
-    const now=new Date(); now.setHours(11+Math.floor(Math.random()*12),Math.floor(Math.random()*60));
-    const items=[];
-    for(let j=0;j<1+Math.floor(Math.random()*2);j++){
-      const idx=Math.floor(Math.random()*names.length);
-      items.push({nombre:names[idx],precio:prices[idx],cantidad:1});
-    }
-    QT.kitchenOrders.push({
-      id: ++QT.orderIdCounter, mesa: mesas[i%mesas.length],
-      items, type: 'base', status: st, created: now,
-      createdStr: formatDate(now)+' '+formatTime(now),
-      total: items.reduce((s,it)=>s+it.precio*it.cantidad,0)
-    });
+  const menu = [
+    {nombre:'Papas bravas',precio:4.90},{nombre:'Ensalada César',precio:6.50},
+    {nombre:'Hamburguesa Clásica',precio:9.90},{nombre:'Hamburguesa BBQ',precio:12.50},
+    {nombre:'Lomo saltado',precio:12.90},{nombre:'Picanha a la parrilla',precio:15.90},
+    {nombre:'Ceviche mixto',precio:14.90},{nombre:'Ají de gallina',precio:11.90},
+    {nombre:'Gaseosa',precio:2.50},{nombre:'Cerveza artesanal',precio:4.00},
+    {nombre:'Maracuyá sour',precio:6.50},{nombre:'Tarta de queso',precio:4.50},
+    {nombre:'Volcán de chocolate',precio:5.20},{nombre:'Café',precio:3.00}
+  ];
+  
+  function pickItem(){
+    const idx=Math.floor(Math.random()*menu.length);
+    return {...menu[idx]};
   }
+  
+  function genOrderItems(){
+    const count=1+Math.floor(Math.random()*4); // 1-4 items
+    const items=[];
+    for(let j=0;j<count;j++){
+      const it=pickItem();
+      const qty=it.precio<5?1+Math.floor(Math.random()*2):1;
+      const existing=items.find(x=>x.nombre===it.nombre);
+      if(existing){existing.cantidad+=qty;}
+      else{items.push({...it,cantidad:qty});}
+    }
+    return items;
+  }
+  
+  function totalItems(arr){return arr.reduce((s,i)=>s+i.cantidad,0);}
+  function totalPrice(arr){return arr.reduce((s,i)=>s+i.precio*i.cantidad,0);}
+  
+  // ========== YEARLY: 2024-2026 ==========
+  const yearVolume={2024:0.4,2025:0.7,2026:1.0}; // growth multiplier
+  
+  for(let y=2024;y<=2026;y++){
+    const vol=yearVolume[y];
+    const monthsToSeed=y===2026?5:11; // up to May 2026
+    for(let m=0;m<=monthsToSeed;m++){
+      const daysInM=new Date(y,m+1,0).getDate();
+      const is2024=y===2024;
+      const isEarly2025=y===2025&&m<3;
+      const baseOrdersPerDay=is2024?8+(m*2):isEarly2025?20:30+(m*0.5);
+      
+      for(let d=1;d<=daysInM;d++){
+        const date=new Date(y,m,d);
+        const dayOfWeek=date.getDay(); // 0=Sun
+        const isWeekend=dayOfWeek===0||dayOfWeek===6;
+        
+        // Weekend boost, weekday lower
+        let ordersToday=Math.round(baseOrdersPerDay*(isWeekend?1.4:1.0)*vol);
+        ordersToday+=Math.floor(Math.random()*10)-5; // variance
+        ordersToday=Math.max(isWeekend?5:3,Math.min(ordersToday,isWeekend?80:60));
+        
+        for(let i=0;i<ordersToday;i++){
+          // Hour distribution: lunch peak 12-14, dinner peak 19-21
+          const hourRand=Math.random();
+          let hour;
+          if(hourRand<0.15) hour=11;
+          else if(hourRand<0.35) hour=12+Math.floor(Math.random()*2); // 12-13
+          else if(hourRand<0.40) hour=14+Math.floor(Math.random()*2); // 14-15
+          else if(hourRand<0.45) hour=16+Math.floor(Math.random()*2); // 16-17
+          else if(hourRand<0.65) hour=19+Math.floor(Math.random()*2); // 19-20
+          else if(hourRand<0.85) hour=20+Math.floor(Math.random()*2); // 20-21
+          else hour=21+Math.floor(Math.random()*3); // 21-23
+          
+          const minute=Math.floor(Math.random()*60);
+          const created=new Date(y,m,d,hour,minute);
+          
+          const items=genOrderItems();
+          const total=totalPrice(items);
+          const statusIdx=Math.min(Math.floor(Math.random()*statuses.length),statuses.length-1);
+          
+          QT.kitchenOrders.push({
+            id: ++QT.orderIdCounter,
+            mesa: mesas[Math.floor(Math.random()*mesas.length)],
+            items, type: Math.random()>0.7?'extra':'base',
+            status: statuses[statusIdx], created,
+            createdStr: formatDate(created)+' '+formatTime(created),
+            total
+          });
+        }
+      }
+    }
+  }
+  
+  // Sort by created date
+  QT.kitchenOrders.sort((a,b)=>b.created-a.created);
+  
+  // Update KPI defaults with realistic base values
+  QT.empresaKPI.ventas_hoy.tendencia='+18%';
+  QT.empresaKPI.pedidos_hoy.tendencia='+12%';
+  QT.empresaKPI.platos_vendidos.tendencia='+22%';
+  QT.empresaKPI.ticket_promedio.tendencia='+5%';
+  QT.empresaKPI.tiempo_medio.tendencia='-8%';
+  QT.empresaKPI.mesas_activas.tendencia='+2 mesas';
+  
   updateEmpresaKPI();
 }
 
@@ -365,7 +423,12 @@ function updateEmpresaKPI() {
   QT.empresaKPI.ventas_hoy.valor=td.reduce((s,x)=>s+x.total,0);
   QT.empresaKPI.pedidos_hoy.valor=td.length;
   QT.empresaKPI.platos_vendidos.valor=td.reduce((s,x)=>s+x.items.reduce((s2,i)=>s2+i.cantidad,0),0);
-  QT.empresaKPI.mesas_activas.valor=[...new Set(o.filter(x=>x.status!=='entregado').map(x=>x.mesa))].length;
+  QT.empresaKPI.mesas_activas.valor=Math.max(2,[...new Set(o.filter(x=>x.status!=='entregado').map(x=>x.mesa))].length);
+  // Ticket promedio
+  const todayPaid=td.filter(x=>x.status==='entregado');
+  if(todayPaid.length>0)QT.empresaKPI.ticket_promedio.valor=todayPaid.reduce((s,x)=>s+x.total,0)/todayPaid.length;
+  // Tiempo medio (simulado: 15-25 min)
+  QT.empresaKPI.tiempo_medio.valor=18+Math.floor(Math.random()*8);
 }
 
 // ============================================================
