@@ -430,24 +430,37 @@ function seedDemoOrders() {
   // Sort by created date
   QT.kitchenOrders.sort((a,b)=>b.created-a.created);
   
-  // Add today's orders for hora view
+  // Add today's orders — batches in 5-min windows for grouped view
   const today=new Date();
-  const todayHour=today.getHours();
-  if(todayHour>=11){
-    const todayCount=Math.max(10,Math.min(40,20+Math.floor(Math.random()*15)));
-    for(let i=0;i<todayCount;i++){
-      const h=(11+Math.floor(Math.random()*Math.min(12,todayHour-10+1)))%24;
-      const created=new Date(today.getFullYear(),today.getMonth(),today.getDate(),h,Math.floor(Math.random()*60));
-      const items=genOrderItems();
-      QT.kitchenOrders.push({
-        id: ++QT.orderIdCounter,
-        mesa: mesas[Math.floor(Math.random()*mesas.length)],
-        items, type: Math.random()>0.7?'extra':'base',
-        status: statuses[Math.min(Math.floor(Math.random()*3),2)],
-        created, createdStr: formatDate(created)+' '+formatTime(created),
-        total: totalPrice(items)
+  const baseH=today.getHours();
+  if(baseH>=11){
+    // 3 time windows: now-5min, now-10min, now-15min
+    const windows=[5,10,15];
+    windows.forEach(minAgo=>{
+      const baseMin=Math.floor((today.getMinutes()-minAgo)/5)*5; // align to 5-min block
+      if(baseMin<0) return;
+      // Each window: 3-5 orders from different tables with overlapping products
+      const tablesInWin=mesas.slice(0,3+Math.floor(Math.random()*3));
+      const products=['Gaseosa','Cerveza artesanal','Papas bravas','Lomo saltado','Hamburguesa Clásica','Tarta de queso'];
+      // Price lookup
+      const precios={Gaseosa:2.50,'Cerveza artesanal':4.00,'Papas bravas':4.90,'Lomo saltado':12.90,'Hamburguesa Clásica':9.90,'Tarta de queso':4.50};
+      tablesInWin.forEach((mesa,ti)=>{
+        const created=new Date(today.getFullYear(),today.getMonth(),today.getDate(),baseH,baseMin+Math.floor(Math.random()*3));
+        const pIdx=Math.floor(Math.random()*Math.min(3,products.length));
+        const items=[{nombre:products[pIdx],precio:precios[products[pIdx]]||9.90,cantidad:1}];
+        if(Math.random()>0.5){
+          const p2=products[(pIdx+1+Math.floor(Math.random()*2))%products.length];
+          items.push({nombre:p2,precio:precios[p2]||9.90,cantidad:1});
+        }
+        QT.kitchenOrders.push({
+          id: ++QT.orderIdCounter, mesa,
+          items, type: 'base',
+          status: statuses[Math.min(ti,statuses.length-1)],
+          created, createdStr: formatDate(created)+' '+formatTime(created),
+          total: totalPrice(items)
+        });
       });
-    }
+    });
   }
 
   // Update KPI defaults with realistic base values
