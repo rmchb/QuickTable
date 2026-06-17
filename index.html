@@ -939,7 +939,7 @@ function renderEmpCocina(el){
     </div>
     <div id="kitchenOrdersContainer">${QT.kitchenOrderMode==='chrono'
       ?(orders.length===0?`<div class="empty-state" style="padding:40px 0;"><div>🍳</div><p>No hay pedidos que mostrar</p></div>`:orders.map(o=>card(o)).join(''))
-      :renderGrouped(orders,card)
+      :renderGrouped(orders)
     }</div>`;
 
   document.querySelectorAll('.order-action-btn').forEach(btn=>{
@@ -957,12 +957,79 @@ function renderEmpCocina(el){
   document.querySelectorAll('.kitchen-sort-btn').forEach(btn=>{btn.onclick=()=>{QT.kitchenOrderMode=btn.dataset.sort;renderEmpCocina(document.getElementById('emp-tab-cocina'));};});
 }
 
-function renderGrouped(orders,card){
-  const g={};orders.forEach(o=>{const k=o.status;if(!g[k])g[k]=[];g[k].push(o);});
-  const so=['nuevo','preparando','listo','entregado'];
-  const lb={nuevo:'🆕 Nuevos',preparando:'👨‍🍳 En preparación',listo:'✅ Listos para entregar',entregado:'🚀 Entregados'};
-  let h='';so.forEach(s=>{if(g[s]&&g[s].length>0)h+=`<div class="order-group"><div class="order-group-title">${lb[s]} <span>${g[s].length}</span></div>${g[s].map(o=>card(o)).join('')}</div>`;});
-  return h||`<div class="empty-state" style="padding:40px 0;"><div>🍳</div><p>No hay pedidos que mostrar</p></div>`;
+function renderGrouped(orders){
+  if(orders.length===0) return `<div class="empty-state" style="padding:40px 0;"><div>🍳</div><p>No hay pedidos que mostrar</p></div>`;
+  
+  // Sort by created time ascending
+  const sorted=[...orders].sort((a,b)=>a.created-b.created);
+  
+  // Group into 5-minute windows
+  const windows=[];
+  let currentWin=null;
+  sorted.forEach(o=>{
+    if(!currentWin||o.created-currentWin.start>300000){ // 5 min = 300000ms
+      currentWin={start:o.created.getTime(),label:'',orders:[],maxStart:o.created.getTime()+300000};
+      windows.push(currentWin);
+    } else if(o.created.getTime()>currentWin.maxStart){
+      // If beyond 15 min from first order, start new window
+      if(o.created.getTime()-currentWin.start>900000){
+        currentWin={start:o.created.getTime(),label:'',orders:[],maxStart:o.created.getTime()+300000};
+        windows.push(currentWin);
+      }
+    }
+    currentWin.orders.push(o);
+  });
+  
+  // Format window labels
+  function fmtTime(ms){const d=new Date(ms);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+  
+  // Build HTML
+  let h='';
+  windows.forEach((w,wi)=>{
+    const startLabel=fmtTime(w.start);
+    const endLabel=fmtTime(w.start+300000);
+    const totalOrders=w.orders.length;
+    
+    // Group items by product name within this window
+    const itemGroups={};
+    const itemTables={};
+    w.orders.forEach(o=>{
+      o.items.forEach(it=>{
+        const key=it.nombre;
+        if(!itemGroups[key]){itemGroups[key]=0;itemTables[key]=[];}
+        itemGroups[key]+=it.cantidad;
+        if(!itemTables[key].includes(o.mesa)) itemTables[key].push(o.mesa);
+      });
+    });
+    
+    const itemEntries=Object.entries(itemGroups).sort((a,b)=>b[1]-a[1]);
+    const maxQty=Math.max(...itemEntries.map(e=>e[1]),1);
+    
+    h+=`<div class="order-group" style="margin-bottom:14px;">
+      <div class="order-group-title" style="display:flex;justify-content:space-between;align-items:center;background:#1a365d;color:white;padding:8px 12px;border-radius:10px;font-size:0.8rem;">
+        <span>🕐 ${startLabel} - ${endLabel}</span>
+        <span style="font-size:0.7rem;background:rgba(255,255,255,0.2);padding:2px 10px;border-radius:10px;">${totalOrders} pedidos</span>
+      </div>
+      <div style="padding:8px 0;">
+        ${itemEntries.map(([name,cant]) => {
+          const tables=itemTables[name].join(', ');
+          const pct=(cant/maxQty)*100;
+          return `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;margin-bottom:4px;background:white;border-radius:8px;border:1px solid #f0e2d5;">
+            <span style="font-weight:700;font-size:0.85rem;color:#c2410c;min-width:28px;">${cant}x</span>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:0.8rem;color:#2d3748;">${name}</div>
+              <div style="font-size:0.6rem;color:#a0aec0;">${tables}</div>
+            </div>
+            <div style="width:60px;height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;">
+              <div style="width:${pct}%;height:100%;background:linear-gradient(90deg,#c2410c,#ea6b2e);border-radius:3px;"></div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+  
+  return h;
 }
 
 // ============================================================
