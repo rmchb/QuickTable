@@ -981,7 +981,7 @@ function renderEmpCocina(el){
   document.getElementById('kitchenFilterSelect')?.addEventListener('change',e=>{QT.kitchenFilter=e.target.value;renderEmpCocina(document.getElementById('emp-tab-cocina'));});
   document.querySelectorAll('.kitchen-sort-btn').forEach(btn=>{btn.onclick=()=>{QT.kitchenOrderMode=btn.dataset.sort;renderEmpCocina(document.getElementById('emp-tab-cocina'));};});
   document.getElementById('groupCategoryFilter')?.addEventListener('change',e=>{QT.kitchenGroupCatFilter=e.target.value;renderEmpCocina(document.getElementById('emp-tab-cocina'));});
-  document.getElementById('groupSearchInput')?.addEventListener('input',e=>{QT.kitchenGroupSearch=e.target.value;renderEmpCocina(document.getElementById('emp-tab-cocina'));});
+  document.getElementById('groupSearchInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'){QT.kitchenGroupSearch=e.target.value;renderEmpCocina(document.getElementById('emp-tab-cocina'));}});
 }
 
 function renderGrouped(orders){
