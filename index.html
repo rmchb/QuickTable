@@ -289,7 +289,8 @@ const cartaData=[
 function totalItems(a){return a.reduce((s,i)=>s+i.cantidad,0);}
 function totalPrice(a){return a.reduce((s,i)=>s+(i.precio*i.cantidad),0);}
 function findItem(id){for(let c of cartaData){let f=c.items.find(i=>i.id===id);if(f)return{...f,tipo:c.tipo};}return null;}
-function formatCurrency(v){return 'S/ '+Number(v).toFixed(2);}
+function formatCurrency(v){const n=Number(v);if(n>=1000)return 'S/ '+(n/1000).toFixed(n>=100000?0:1)+'k';return 'S/ '+n.toFixed(2);}
+function formatShort(v){const n=Number(v);if(n>=1000)return (n/1000).toFixed(n>=100000?0:1)+'k';return String(n);}
 function formatTime(d){return d.toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});}
 function formatDate(d){return d.toLocaleDateString('es-PE',{day:'numeric',month:'short',year:'numeric'});}
 
@@ -702,7 +703,7 @@ function renderEmpresa(c){
 function renderEmpDash(el){
   if(!el)return;
   const k=QT.empresaKPI;
-  const fmt={moneda:v=>'S/ '+Number(v).toFixed(2),numero:v=>Number(v).toLocaleString('es-PE'),minutos:v=>v+' min'};
+  const fmt={moneda:v=>formatCurrency(v),numero:v=>formatShort(v),minutos:v=>v+' min'};
   const kpis=[{label:'Ventas Hoy',key:'ventas_hoy'},{label:'Pedidos Hoy',key:'pedidos_hoy'},{label:'Platos Vendidos',key:'platos_vendidos'},{label:'Ticket Promedio',key:'ticket_promedio'},{label:'Tiempo Medio',key:'tiempo_medio'},{label:'Mesas Activas',key:'mesas_activas'}];
 
   // Top items
@@ -807,11 +808,11 @@ function renderEmpDash(el){
           </div>
         </div>
         <div style="display:flex;align-items:flex-end;gap:3px;height:120px;padding:8px 4px;overflow-x:auto;min-height:120px;">
-          ${chartVals.map((v,i)=>{const bw=view==='hora'?100:view==='dia'?80:view==='semana'?60:view==='mes'?60:80;const fw=view==='hora'?40:view==='dia'?50:view==='semana'?60:view==='mes'?50:50;return `<div style="flex:1;min-width:${fw}px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="font-size:0.55rem;color:#718096;margin-bottom:2px;font-weight:600;">S/ ${v.toFixed(0)}</span><div style="width:${bw}%;background:#e2e8f0;border-radius:3px;height:80px;position:relative;overflow:hidden;"><div style="position:absolute;bottom:0;left:0;width:100%;height:${(v/maxPeriod)*100}%;background:linear-gradient(180deg,#c2410c,#a3350a);border-radius:3px;transition:0.3s;"></div></div><span style="font-size:0.5rem;color:#a0aec0;margin-top:2px;text-align:center;white-space:nowrap;">${chartKeys[i]}</span></div>`;}).join('')}
+          ${chartVals.map((v,i)=>{const bw=view==='hora'?100:view==='dia'?80:view==='semana'?60:view==='mes'?60:80;const fw=view==='hora'?40:view==='dia'?50:view==='semana'?60:view==='mes'?50:50;return `<div style="flex:1;min-width:${fw}px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;"><span style="font-size:0.55rem;color:#718096;margin-bottom:2px;font-weight:600;">${formatCurrency(v)}</span><div style="width:${bw}%;background:#e2e8f0;border-radius:3px;height:80px;position:relative;overflow:hidden;"><div style="position:absolute;bottom:0;left:0;width:100%;height:${(v/maxPeriod)*100}%;background:linear-gradient(180deg,#c2410c,#a3350a);border-radius:3px;transition:0.3s;"></div></div><span style="font-size:0.5rem;color:#a0aec0;margin-top:2px;text-align:center;white-space:nowrap;">${chartKeys[i]}</span></div>`;}).join('')}
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:8px;border-top:1px solid #f0e2d5;padding-top:8px;">
-          <span style="font-size:0.65rem;color:#718096;">Total: <strong>S/ ${chartVals.reduce((s,v)=>s+v,0).toFixed(2)}</strong></span>
-          <span style="font-size:0.65rem;color:#718096;">Promedio: <strong>S/ ${(chartVals.reduce((s,v)=>s+v,0)/chartVals.length).toFixed(2)}</strong></span>
+          <span style="font-size:0.65rem;color:#718096;">Total: <strong>${formatCurrency(chartVals.reduce((s,v)=>s+v,0))}</strong></span>
+          <span style="font-size:0.65rem;color:#718096;">Promedio: <strong>${formatCurrency(chartVals.reduce((s,v)=>s+v,0)/chartVals.length)}</strong></span>
         </div>
       </div>
     </div>
