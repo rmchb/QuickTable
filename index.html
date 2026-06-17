@@ -269,6 +269,9 @@ const QT = {
   orderIdCounter: 0,
   seeded: false,
   chartView: 'hora',       // 'hora' | 'dia' | 'semana' | 'mes' | 'anio'
+  chatMessages: [],
+  chatFiles: {photos:[],audio:[],docs:[]},
+  chatView: 'chat'
 };
 
 // ============================================================
@@ -353,60 +356,73 @@ function seedDemoOrders() {
   // ========== YEARLY: 2024-2026 ==========
   const yearVolume={2024:0.4,2025:0.7,2026:1.0}; // growth multiplier
   
-  for(let y=2024;y<=2026;y++){
-    const vol=yearVolume[y];
-    const monthsToSeed=y===2026?5:11; // up to May 2026
-    for(let m=0;m<=monthsToSeed;m++){
-      const daysInM=new Date(y,m+1,0).getDate();
-      const is2024=y===2024;
-      const isEarly2025=y===2025&&m<3;
-      const baseOrdersPerDay=is2024?8+(m*2):isEarly2025?20:30+(m*0.5);
-      
-      for(let d=1;d<=daysInM;d++){
-        const date=new Date(y,m,d);
-        const dayOfWeek=date.getDay(); // 0=Sun
-        const isWeekend=dayOfWeek===0||dayOfWeek===6;
-        
-        // Weekend boost, weekday lower
-        let ordersToday=Math.round(baseOrdersPerDay*(isWeekend?1.4:1.0)*vol);
-        ordersToday+=Math.floor(Math.random()*10)-5; // variance
-        ordersToday=Math.max(isWeekend?5:3,Math.min(ordersToday,isWeekend?80:60));
-        
-        for(let i=0;i<ordersToday;i++){
-          // Hour distribution: lunch peak 12-14, dinner peak 19-21
-          const hourRand=Math.random();
-          let hour;
-          if(hourRand<0.15) hour=11;
-          else if(hourRand<0.35) hour=12+Math.floor(Math.random()*2); // 12-13
-          else if(hourRand<0.40) hour=14+Math.floor(Math.random()*2); // 14-15
-          else if(hourRand<0.45) hour=16+Math.floor(Math.random()*2); // 16-17
-          else if(hourRand<0.65) hour=19+Math.floor(Math.random()*2); // 19-20
-          else if(hourRand<0.85) hour=20+Math.floor(Math.random()*2); // 20-21
-          else hour=21+Math.floor(Math.random()*3); // 21-23
-          
-          const minute=Math.floor(Math.random()*60);
-          const created=new Date(y,m,d,hour,minute);
-          
-          const items=genOrderItems();
-          const total=totalPrice(items);
-          const statusIdx=Math.min(Math.floor(Math.random()*statuses.length),statuses.length-1);
-          
-          QT.kitchenOrders.push({
-            id: ++QT.orderIdCounter,
-            mesa: mesas[Math.floor(Math.random()*mesas.length)],
-            items, type: Math.random()>0.7?'extra':'base',
-            status: statuses[statusIdx], created,
-            createdStr: formatDate(created)+' '+formatTime(created),
-            total
-          });
-        }
+  const samples=[];
+  // Sample days per month: ~8 days spread across the month
+  const monthsConfig=[
+    {y:2024,m:5,days:[5,8,12,15,18,22,25,28]},
+    {y:2025,m:0,days:[3,7,10,14,17,21,24,28]},
+    {y:2025,m:5,days:[2,6,9,13,16,20,23,27,30]},
+    {y:2025,m:11,days:[1,4,8,11,15,18,22,26,29]},
+    {y:2026,m:0,days:[3,6,10,13,17,20,24,27,31]},
+    {y:2026,m:1,days:[2,5,9,12,16,19,23,26]},
+    {y:2026,m:2,days:[1,4,8,11,15,18,22,25,29]},
+    {y:2026,m:3,days:[3,6,10,13,17,20,24,27]},
+    {y:2026,m:4,days:[1,5,8,12,15,19,22,26,29]},
+    {y:2026,m:5,days:[2,4,7,11,14,18,21,25,28]}
+  ];
+  monthsConfig.forEach(({y,m,days}) => {
+    const yearFactor=y===2024?0.4:y===2025?0.7:1.0;
+    days.forEach(d => {
+      const date=new Date(y,m,d);
+      const isWeekend=date.getDay()===0||date.getDay()===6;
+      const orderCount=Math.round((isWeekend?40:25)*yearFactor);
+      for(let i=0;i<orderCount;i++){
+        const hourRand=Math.random();
+        let hour;
+        if(hourRand<0.15) hour=11;
+        else if(hourRand<0.35) hour=12+Math.floor(Math.random()*2);
+        else if(hourRand<0.40) hour=14+Math.floor(Math.random()*2);
+        else if(hourRand<0.45) hour=16+Math.floor(Math.random()*2);
+        else if(hourRand<0.65) hour=19+Math.floor(Math.random()*2);
+        else if(hourRand<0.85) hour=20+Math.floor(Math.random()*2);
+        else hour=21+Math.floor(Math.random()*3);
+        const created=new Date(y,m,d,hour,Math.floor(Math.random()*60));
+        const items=genOrderItems();
+        QT.kitchenOrders.push({
+          id: ++QT.orderIdCounter,
+          mesa: mesas[Math.floor(Math.random()*mesas.length)],
+          items, type: Math.random()>0.7?'extra':'base',
+          status: statuses[Math.min(Math.floor(Math.random()*statuses.length),statuses.length-1)],
+          created, createdStr: formatDate(created)+' '+formatTime(created),
+          total: totalPrice(items)
+        });
       }
-    }
-  }
+    });
+  });
   
   // Sort by created date
   QT.kitchenOrders.sort((a,b)=>b.created-a.created);
   
+  // Add today's orders for hora view
+  const today=new Date();
+  const todayHour=today.getHours();
+  if(todayHour>=11){
+    const todayCount=Math.max(10,Math.min(40,20+Math.floor(Math.random()*15)));
+    for(let i=0;i<todayCount;i++){
+      const h=(11+Math.floor(Math.random()*Math.min(12,todayHour-10+1)))%24;
+      const created=new Date(today.getFullYear(),today.getMonth(),today.getDate(),h,Math.floor(Math.random()*60));
+      const items=genOrderItems();
+      QT.kitchenOrders.push({
+        id: ++QT.orderIdCounter,
+        mesa: mesas[Math.floor(Math.random()*mesas.length)],
+        items, type: Math.random()>0.7?'extra':'base',
+        status: statuses[Math.min(Math.floor(Math.random()*3),2)],
+        created, createdStr: formatDate(created)+' '+formatTime(created),
+        total: totalPrice(items)
+      });
+    }
+  }
+
   // Update KPI defaults with realistic base values
   QT.empresaKPI.ventas_hoy.tendencia='+18%';
   QT.empresaKPI.pedidos_hoy.tendencia='+12%';
