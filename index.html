@@ -248,8 +248,8 @@ hr { margin:14px 0; border:none; border-top:1px solid #f0e2d5; }
 @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
 
 /* Inventory */
-.inv-subnav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
-.inv-subnav button { font-size:0.7rem; padding:5px 12px; border-radius:8px; border:1px solid #e2e8f0; background:white; cursor:pointer; }
+.inv-subnav { display:flex; gap:4px; flex-wrap:nowrap; margin-bottom:14px; overflow-x:auto; }
+.inv-subnav button { font-size:0.6rem; padding:4px 8px; border-radius:6px; border:1px solid #e2e8f0; background:white; cursor:pointer; white-space:nowrap; }
 .inv-subnav button.active { background:#1a365d; color:white; border-color:#1a365d; }
 .inv-bar { height:8px; border-radius:4px; overflow:hidden; background:#e2e8f0; min-width:60px; }
 .inv-bar-fill { height:100%; border-radius:4px; transition:width 0.3s; }
